@@ -1,8 +1,8 @@
 
 import React from "react";
 import "../css/style.css";
-import "https://code.jquery.com/jquery-3.4.1.min.js";
-import "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js";
+// import "https://code.jquery.com/jquery-3.4.1.min.js";
+// import "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js";
 import "../lib/animate/animate.min.css";
 import "../lib/owlcarousel/assets/owl.carousel.min.css";
 import Product from "./Product";
