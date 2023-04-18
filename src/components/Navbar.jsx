@@ -77,7 +77,7 @@ function Navbar({ cos }) {
     <>
       <div className="container-fluid">
         <div className="row align-items-center bg-light py-3 px-xl-5 ">
-          <div className="col-lg-4">
+          <div className="col-lg-4 	d-none d-lg-block ">
             <Link to="/" className="text-decoration-none">
               <span className="h1 text-uppercase text-primary bg-dark px-2">
                 NAVI
