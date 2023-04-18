@@ -65,7 +65,6 @@ async function getProduct(productId) {
             <a
               className="btn btn-outline-dark btn-square"
               href={link}
-              params={{ testvalue: "hello" }}
             >
               <i className="fa fa-search"></i>
             </a>
@@ -85,17 +84,26 @@ async function getProduct(productId) {
           </div>
           <div className="d-flex align-items-center justify-content-center mb-1">
             {[...Array(5)].map((e, index) => {
-               return (
+              return (
                 <>
                   {index >= rating ? (
                     //gol
-                    <i className="far fa-star text-primary mr-1" key={index}></i>
+                    <i
+                      className="far fa-star text-primary mr-1"
+                      key={index}
+                    ></i>
                   ) : index + 1 <= Math.floor(rating) ? (
                     //plin
-                    <i className="fas fa-star text-primary mr-1" key={index}></i>
+                    <i
+                      className="fas fa-star text-primary mr-1"
+                      key={index}
+                    ></i>
                   ) : (
                     //jumate
-                    <i className="fas fa-star-half-alt text-primary mr-1" key={index}></i>
+                    <i
+                      className="fas fa-star-half-alt text-primary mr-1"
+                      key={index}
+                    ></i>
                   )}
                 </>
               );
