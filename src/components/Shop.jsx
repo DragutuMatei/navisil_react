@@ -14,7 +14,6 @@ function Shop({ addit }) {
       .readDocuments("products", ["categories", "==", categorie])
       .then((res) => {
         if (sort_param) {
-          // console.log(sort_param);
           sort(res, sort_param);
         }
         arr = res;

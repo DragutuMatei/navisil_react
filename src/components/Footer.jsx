@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function Footer() {
   return (
@@ -15,10 +16,12 @@ function Footer() {
             Street, New York, USA
           </p>
           <p className="mb-2">
-            <i className="fa fa-envelope text-primary mr-3"></i>info@example.com
+            <i className="fa fa-envelope text-primary mr-3"></i>
+            <a href="mailto: info@example.com">info@example.com</a>
           </p>
           <p className="mb-0">
-            <i className="fa fa-phone-alt text-primary mr-3"></i>+012 345 67890
+            <i className="fa fa-phone-alt text-primary mr-3"></i>
+            <a href="tel:012 345 67890">+012 345 67890</a>
           </p>
         </div>
         <div className="col-lg-8 col-md-12">
@@ -26,27 +29,21 @@ function Footer() {
             <div className="col-md-4 mb-5">
               <h5 className="text-secondary text-uppercase mb-4">Quick Shop</h5>
               <div className="d-flex flex-column justify-content-start">
-                <a className="text-secondary mb-2" href="#">
+                <a className="text-secondary mb-2" href="/">
                   <i className="fa fa-angle-right mr-2"></i>Home
                 </a>
-                <a className="text-secondary mb-2" href="#">
+                <a className="text-secondary mb-2" href="/shop/all">
                   <i className="fa fa-angle-right mr-2"></i>Our Shop
                 </a>
-                <a className="text-secondary mb-2" href="#">
-                  <i className="fa fa-angle-right mr-2"></i>Shop Detail
-                </a>
-                <a className="text-secondary mb-2" href="#">
+                <Link className="text-secondary mb-2" to="/cart">
                   <i className="fa fa-angle-right mr-2"></i>Shopping Cart
-                </a>
-                <a className="text-secondary mb-2" href="#">
-                  <i className="fa fa-angle-right mr-2"></i>Checkout
-                </a>
-                <a className="text-secondary" href="#">
+                </Link>
+                <Link className="text-secondary" to="/contact">
                   <i className="fa fa-angle-right mr-2"></i>Contact Us
-                </a>
+                </Link>
               </div>
             </div>
-            <div className="col-md-4 mb-5">
+            {/* <div className="col-md-4 mb-5">
               <h5 className="text-secondary text-uppercase mb-4">My Account</h5>
               <div className="d-flex flex-column justify-content-start">
                 <a className="text-secondary mb-2" href="#">
@@ -68,7 +65,7 @@ function Footer() {
                   <i className="fa fa-angle-right mr-2"></i>Contact Us
                 </a>
               </div>
-            </div>
+            </div> */}
             <div className="col-md-4 mb-5">
               <h5 className="text-secondary text-uppercase mb-4">Newsletter</h5>
               <p>Duo stet tempor ipsum sit amet magna ipsum tempor est</p>
@@ -121,13 +118,13 @@ function Footer() {
             </a>
           </p>
         </div>
-        <div className="col-md-6 px-xl-0 text-center text-md-right">
+        {/* <div className="col-md-6 px-xl-0 text-center text-md-right">
           <img
             className="img-fluid"
             src={require("../img/payments.png")}
             alt=""
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );

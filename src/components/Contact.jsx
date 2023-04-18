@@ -10,7 +10,7 @@ function Contact() {
     email: "",
     subject: "",
     message: "",
-    date: new Date().toUTCString()
+    date: new Date().toUTCString(),
   });
 
   const handlemessage = (id, data) => {
@@ -130,11 +130,11 @@ function Contact() {
               </p>
               <p className="mb-2">
                 <i className="fa fa-envelope text-primary mr-3"></i>
-                info@example.com
+                <a href="mailto: info@example.com">info@example.com</a>
               </p>
               <p className="mb-2">
-                <i className="fa fa-phone-alt text-primary mr-3"></i>+012 345
-                67890
+                <i className="fa fa-phone-alt text-primary mr-3"></i>{" "}
+                <a href="tel:012 345 67890">+012 345 67890</a>
               </p>
             </div>
           </div>

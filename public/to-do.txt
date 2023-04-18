@@ -1,6 +1,4 @@
 sorting/filter
 search
 final form la comenzi
-safe delete
-Footer
 home page
