@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, orderBy } from "firebase/firestore";
+import { getFirestore, limit, orderBy } from "firebase/firestore";
 import {
   updateDoc,
   collection,
@@ -223,7 +223,7 @@ export default class Firestore {
   }
 
   // Read all documents in a collection
-  async readDocuments(collectionName, condition) {
+  async readDocuments(collectionName, condition, limitare) {
     let q;
     //   console.log(condition[2])
     //   q = query(
@@ -235,17 +235,32 @@ export default class Firestore {
     // }
     if (condition == undefined || condition[2] === "all") {
       q = query(collection(this.db, collectionName));
-    } else if (condition !== undefined && condition[2].includes("search")) {
+    } else if (
+      condition !== undefined &&
+      limitare == undefined &&
+      (typeof condition[2] !== "string" || typeof condition[2] !== "number") &&
+      condition[2].includes("search")
+    ) {
       q = query(collection(this.db, collectionName));
-    } else {
+    } else if (limitare == undefined) {
       q = query(
         collection(this.db, collectionName),
         where(condition[0], condition[1], condition[2])
       );
+    } else {
+      q = query(
+        collection(this.db, collectionName),
+        where(condition[0], condition[1], condition[2]),
+        limit(limitare)
+      );
     }
     const querySnapshot = await getDocs(q);
     const documents = [];
-    if (condition !== undefined && condition[2].includes("search")) {
+    if (
+      condition !== undefined &&
+      typeof condition[2] !== "number" &&
+      condition[2].includes("search")
+    ) {
       condition[2] = condition[2].slice(6);
       querySnapshot.forEach((doc) => {
         if (doc.get("nume").includes(condition[2])) {

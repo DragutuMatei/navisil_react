@@ -66,7 +66,7 @@ function App() {
     <Router>
       <Navbar cos={cos} />
       <Routes>
-        <Route path="/" Component={Home} />
+        <Route path="/" element={<Home addit={addit} />} />
         <Route
           path="/shop/:categorie/:sort_param?"
           element={<Shop addit={addit} />}

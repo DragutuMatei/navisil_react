@@ -8,10 +8,11 @@ const firestore = new Firestore();
 function Shop({ addit }) {
   const { categorie, sort_param } = useParams();
   const [products, setProducts] = useState([]);
-
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   useEffect(() => {
     if (categorie.includes("search")) {
-      console.log(categorie)
       firestore
         .readDocuments("products", ["nume", [">=", "<="], categorie])
         .then((res) => {

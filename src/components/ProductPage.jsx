@@ -520,12 +520,21 @@ function ProductPage({ addit }) {
                           return (
                             <>
                               <div className="media mb-4" key={index}>
-                                <img
-                                  src={rev.user.img}
-                                  alt="Image"
-                                  className="img-fluid mr-3 mt-1"
-                                  style={{ width: 45, borderRadius: "90%" }}
-                                />
+                                {
+                                  rev.user.img ? 
+                                  <img
+                                    src={rev.user.img}
+                                    alt="Image"
+                                    className="img-fluid mr-3 mt-1"
+                                    style={{ width: 45, borderRadius: "90%" }}
+                                  />:
+                                  <img
+                                    src={require("../img/user_placeholder.png")}
+                                    alt="Image"
+                                    className="img-fluid mr-3 mt-1"
+                                    style={{ width: 45, borderRadius: "90%" }}
+                                  />
+                                }
                                 <div className="media-body">
                                   <h6>
                                     {rev.user.nume}

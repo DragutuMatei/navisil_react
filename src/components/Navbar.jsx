@@ -28,7 +28,7 @@ function Navbar({ cos }) {
   const [user, loading, error] = useAuthState(auth);
   const [categories, setCategories] = useState([]);
   const getCategories = async () => {
-    firestore.readDocuments("categories").then((res) => {
+   await firestore.readDocuments("categories").then((res) => {
       setCategories(res);
       // console.log(res);
     });
@@ -93,7 +93,7 @@ function Navbar({ cos }) {
             </Link>
           </div>
           <div className="col-lg-4 col-6 text-left">
-            <form action="">
+            <div>
               <div className="input-group">
                 <input
                   type="text"
@@ -113,7 +113,7 @@ function Navbar({ cos }) {
                   </span>
                 </div>
               </div>
-            </form>
+            </div>
           </div>
           <div className="col-lg-4 col-6 text-right">
             {user ? (
