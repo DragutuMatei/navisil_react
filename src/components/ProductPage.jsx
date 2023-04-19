@@ -5,7 +5,6 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import Placeholder from "../util/Placeholder";
 import Product from "./Product";
 import Text from "../util/Text";
-import ShareButton from "./ShareButton";
 
 const firestore = new Firestore();
 
@@ -15,6 +14,21 @@ function ProductPage({ addit }) {
   const [user, loading, error] = useAuthState(firestore.getuser());
   const [produs, setProdus] = useState();
   const [value, setValue] = useState(1);
+
+  const shareF = () => {
+    window.open(
+      "https://www.facebook.com/sharer/sharer.php?u=" +
+        encodeURIComponent(window.location.href)
+    );
+  };
+
+  const shareI = () => {
+    window.open(
+      "https://www.instagram.com/share?url=" +
+        encodeURIComponent(window.location.href)
+    );
+  };
+
   useEffect(() => {
     firestore.getProductById(id).then((res) => {
       setProdus(res);
@@ -417,18 +431,11 @@ function ProductPage({ addit }) {
                 <strong className="text-dark mr-2">Share on:</strong>
                 <div className="d-inline-flex">
                   <div className="text-dark px-2">
-                    <ShareButton quote="Check out this cool website I found!" />
-                    <i className="fab fa-facebook-f"></i>
+                    <i className="fab fa-facebook-f" onClick={shareF}></i>
                   </div>
-                  <a className="text-dark px-2" href="">
-                    <i className="fab fa-twitter"></i>
-                  </a>
-                  <a className="text-dark px-2" href="">
-                    <i className="fab fa-linkedin-in"></i>
-                  </a>
-                  <a className="text-dark px-2" href="">
-                    <i className="fab fa-pinterest"></i>
-                  </a>
+                  <div className="text-dark px-2" onClick={shareI}>
+                    <i className="fab fa-instagram"></i>
+                  </div>
                 </div>
               </div>
             </div>

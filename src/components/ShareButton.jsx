@@ -1,15 +1,19 @@
 import React from 'react';
 
-function ShareButton(props) {
-  const handleClick = () => {
-    const url = encodeURIComponent(window.location.href);
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${props.quote}`);
-  };
+function ShareButton() {
+  const shareOnFacebook = () => {
+    window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(window.location.href));
+  }
+
+  const shareOnInstagram = () => {
+    window.open("https://www.instagram.com/share?url=" + encodeURIComponent(window.location.href));
+  }
 
   return (
-    <button onClick={handleClick}>
-      Share on Facebook
-    </button>
+    <div>
+      <button onClick={shareOnFacebook}>Share on Facebook</button>
+      <button onClick={shareOnInstagram}>Share on Instagram</button>
+    </div>
   );
 }
 
