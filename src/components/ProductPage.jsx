@@ -416,7 +416,7 @@ function ProductPage({ addit }) {
               <div className="d-flex pt-2">
                 <strong className="text-dark mr-2">Share on:</strong>
                 <div className="d-inline-flex">
-                  <div className="text-dark px-2" >
+                  <div className="text-dark px-2">
                     <ShareButton quote="Check out this cool website I found!" />
                     <i className="fab fa-facebook-f"></i>
                   </div>
@@ -521,21 +521,21 @@ function ProductPage({ addit }) {
                           return (
                             <>
                               <div className="media mb-4" key={index}>
-                                {
-                                  rev.user.img ? 
+                                {rev.user.img ? (
                                   <img
                                     src={rev.user.img}
                                     alt="Image"
                                     className="img-fluid mr-3 mt-1"
                                     style={{ width: 45, borderRadius: "90%" }}
-                                  />:
+                                  />
+                                ) : (
                                   <img
                                     src={require("../img/user_placeholder.png")}
                                     alt="Image"
                                     className="img-fluid mr-3 mt-1"
                                     style={{ width: 45, borderRadius: "90%" }}
                                   />
-                                }
+                                )}
                                 <div className="media-body">
                                   <h6>
                                     {rev.user.nume}
@@ -590,8 +590,9 @@ function ProductPage({ addit }) {
                         <div className="col-md-6">
                           <h4 className="mb-4">Leave a review</h4>
                           <small>
-                            Your email address will not be published. Required
-                            fields are marked *
+                            You are commenting as <b> {user.displayName}</b>
+                            <br />
+                            Required fields are marked *
                           </small>
                           <div className="d-flex my-3">
                             <p className="mb-0 mr-2">Your Rating * :</p>
@@ -697,7 +698,7 @@ function ProductPage({ addit }) {
                     );
                 })
               ) : (
-                  <h4>Nu mai sunt alte produse din aceasta categorie</h4>
+                <h4>Nu mai sunt alte produse din aceasta categorie</h4>
                 // <div
                 //   className="carousel-item active"
                 //   key={Math.random()}
