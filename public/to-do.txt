@@ -1,4 +1,3 @@
 sorting/filter
-search
 final form la comenzi
 home page

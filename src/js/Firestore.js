@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, orderBy } from "firebase/firestore";
 import {
   updateDoc,
   collection,
@@ -225,7 +225,17 @@ export default class Firestore {
   // Read all documents in a collection
   async readDocuments(collectionName, condition) {
     let q;
+    //   console.log(condition[2])
+    //   q = query(
+    //     collection(this.db, collectionName),
+    //     orderBy(condition[0],"asc")
+    //     // where(condition[0], condition[1][0], condition[2]),
+    //     // where(condition[0], condition[1][1], condition[2]+ '\uf8ff')
+    //   );
+    // }
     if (condition == undefined || condition[2] === "all") {
+      q = query(collection(this.db, collectionName));
+    } else if (condition !== undefined && condition[2].includes("search")) {
       q = query(collection(this.db, collectionName));
     } else {
       q = query(
@@ -235,9 +245,18 @@ export default class Firestore {
     }
     const querySnapshot = await getDocs(q);
     const documents = [];
-    querySnapshot.forEach((doc) => {
-      documents.push({ id: doc.id, ...doc.data() });
-    });
+    if (condition !== undefined && condition[2].includes("search")) {
+      condition[2] = condition[2].slice(6);
+      querySnapshot.forEach((doc) => {
+        if (doc.get("nume").includes(condition[2])) {
+          documents.push({ id: doc.id, ...doc.data() });
+        }
+      });
+    } else {
+      querySnapshot.forEach((doc) => {
+        documents.push({ id: doc.id, ...doc.data() });
+      });
+    }
 
     return documents;
   }

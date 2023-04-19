@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Firestore from "../js/Firestore";
 import firebase from "firebase/compat/app";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -69,10 +69,15 @@ function Navbar({ cos }) {
   const logout = async () => {
     await firestore.logout();
   };
+  const navigate = useNavigate();
   // // console.log(user);
 
   const [search, setSearch] = useState("");
-  const searchfct = () => {};
+  const searchfct = () => {
+    const link = "/shop/search" + search;
+    navigate(link)
+    // window.href = link;
+  };
   return (
     <>
       <div className="container-fluid">
@@ -96,8 +101,14 @@ function Navbar({ cos }) {
                   className="form-control"
                   placeholder="Search for products"
                 />
-                <div className="input-group-append" onClick={searchfct}>
-                  <span className="input-group-text bg-transparent text-primary">
+                <div className="input-group-append">
+                  <span
+                    className="input-group-text bg-transparent text-primary"
+                    onClick={searchfct}
+                    style={{
+                      cursor: "pointer",
+                    }}
+                  >
                     <i className="fa fa-search"></i>
                   </span>
                 </div>

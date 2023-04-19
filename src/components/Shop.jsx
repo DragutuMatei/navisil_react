@@ -10,15 +10,27 @@ function Shop({ addit }) {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    firestore
-      .readDocuments("products", ["categories", "==", categorie])
-      .then((res) => {
-        if (sort_param) {
-          sort(res, sort_param);
-        }
-        arr = res;
-        setProducts(res);
-      });
+    if (categorie.includes("search")) {
+      console.log(categorie)
+      firestore
+        .readDocuments("products", ["nume", [">=", "<="], categorie])
+        .then((res) => {
+          if (sort_param) {
+            sort(res, sort_param);
+          }
+          arr = res;
+          setProducts(res);
+        });
+    } else
+      firestore
+        .readDocuments("products", ["categories", "==", categorie])
+        .then((res) => {
+          if (sort_param) {
+            sort(res, sort_param);
+          }
+          arr = res;
+          setProducts(res);
+        });
   }, [categorie, sort_param]);
 
   const sort = async (arr, cat) => {
