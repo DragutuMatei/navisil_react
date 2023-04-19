@@ -5,6 +5,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import Placeholder from "../util/Placeholder";
 import Product from "./Product";
 import Text from "../util/Text";
+import ShareButton from "./ShareButton";
 
 const firestore = new Firestore();
 
@@ -415,10 +416,10 @@ function ProductPage({ addit }) {
               <div className="d-flex pt-2">
                 <strong className="text-dark mr-2">Share on:</strong>
                 <div className="d-inline-flex">
-                  <a className="text-dark px-2" href="">
-                    {/* <ShareButton quote="Check out this cool website I found!" /> */}
+                  <div className="text-dark px-2" >
+                    <ShareButton quote="Check out this cool website I found!" />
                     <i className="fab fa-facebook-f"></i>
-                  </a>
+                  </div>
                   <a className="text-dark px-2" href="">
                     <i className="fab fa-twitter"></i>
                   </a>

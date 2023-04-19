@@ -225,14 +225,7 @@ export default class Firestore {
   // Read all documents in a collection
   async readDocuments(collectionName, condition, limitare) {
     let q;
-    //   console.log(condition[2])
-    //   q = query(
-    //     collection(this.db, collectionName),
-    //     orderBy(condition[0],"asc")
-    //     // where(condition[0], condition[1][0], condition[2]),
-    //     // where(condition[0], condition[1][1], condition[2]+ '\uf8ff')
-    //   );
-    // }
+
     if (condition == undefined || condition[2] === "all") {
       q = query(collection(this.db, collectionName));
     } else if (

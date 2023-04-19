@@ -13,8 +13,9 @@ function Shop({ addit }) {
   }, []);
   useEffect(() => {
     if (categorie.includes("search")) {
+      //search ========== includes
       firestore
-        .readDocuments("products", ["nume", [">=", "<="], categorie])
+        .readDocuments("products", ["nume", [], categorie])
         .then((res) => {
           if (sort_param) {
             sort(res, sort_param);
@@ -52,6 +53,10 @@ function Shop({ addit }) {
       case "nd":
         arr.sort((a, b) => b.nume.localeCompare(a.nume));
         // setProducts((prod) => [...prod.sort((a, b) => b.nume - a.nume)]);
+        break;
+
+      case "rc":
+        arr.sort((a, b) => b.rating - a.rating);
         break;
     }
     setProducts([...arr]);
@@ -353,6 +358,14 @@ function Shop({ addit }) {
                           // onClick={() => sort("nd")}
                         >
                           Nume - descrescator
+                        </Link>
+                        
+                        <Link
+                          to={`/shop/${categorie}/rc`}
+                          className="dropdown-item"
+                          style={{ cursor: "pointer" }}
+                        >
+                          Cele mai populare
                         </Link>
                       </div>
                     </div>
