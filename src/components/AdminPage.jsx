@@ -78,6 +78,12 @@ function AdminPage() {
     getCategories();
     getProducts();
   }, []);
+  const delete_rev = async (rev) => {
+    // console.log(rev);
+    await firestore.deleteRev({ rev, id: rev.id }).then((res) => {
+      getProducts();
+    });
+  };
 
   const modifield = (field, e) => {
     setNewItem((old) => ({
@@ -556,6 +562,75 @@ function AdminPage() {
                     <p>Descriere scurta: {prod.descriere_scurta}</p>
                     <p>Descriere lunga: {prod.descriere_lunga}</p>
                     <p>Informatii: {prod.info}</p>
+                    <h5>Reviews: </h5>
+                    <div>
+                      {prod && prod.reviews ? (
+                        prod.reviews.map((rev, index) => {
+                          return (
+                            <>
+                              <div className="media mb-4" key={index}>
+                                {rev.user.img ? (
+                                  <img
+                                    src={rev.user.img}
+                                    alt="Image"
+                                    className="img-fluid mr-3 mt-1"
+                                    style={{ width: 45, borderRadius: "90%" }}
+                                  />
+                                ) : (
+                                  <img
+                                    src={require("../img/user_placeholder.png")}
+                                    alt="Image"
+                                    className="img-fluid mr-3 mt-1"
+                                    style={{ width: 45, borderRadius: "90%" }}
+                                  />
+                                )}
+                                <div className="media-body">
+                                  <h6>
+                                    {rev.user.nume}
+                                    <small>
+                                      {" "}
+                                      - <i>{rev.date}</i>
+                                    </small>
+                                  </h6>
+                                  <div className="text-primary mb-2">
+                                    {[...Array(5)].map((e, index) => {
+                                      return (
+                                        <>
+                                          {index >= rev.rating ? (
+                                            <i
+                                              className="far fa-star"
+                                              key={index}
+                                            ></i>
+                                          ) : (
+                                            <i
+                                              className="fas fa-star"
+                                              key={index}
+                                            ></i>
+                                          )}
+                                        </>
+                                      );
+                                    })}
+                                  </div>
+                                  <p>{rev.review} </p>
+                                  <>
+                                    <button
+                                      className="btn btn-primary px-3"
+                                      onClick={() => {
+                                        delete_rev(rev);
+                                      }}
+                                    >
+                                      Delete review
+                                    </button>
+                                  </>
+                                </div>
+                              </div>
+                            </>
+                          );
+                        })
+                      ) : (
+                        <h5>Nu sunt reviews pentru acest produs</h5>
+                      )}
+                    </div>
                   </div>
                   <hr />
                 </React.Fragment>

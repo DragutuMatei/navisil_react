@@ -2,3 +2,12 @@ sorting/filter (brand, pret, reducere, ?? )
 final form la comenzi
 key words
 o scurta descriere 
+
+
+[
+    ["pret", "==", pret],
+    ["pret", "==", pret],
+    ["pret", "==", pret],
+    ["pret", "==", pret],
+    ["pret", "==", pret]
+]

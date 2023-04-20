@@ -222,6 +222,39 @@ export default class Firestore {
     }
   }
 
+  async filter(products, filters) {
+    let arr = products;
+    let rez = [];
+    for (let i = 0; i < filters.length; i++) {
+      // for (let j = 0; j < arr.length; j++){
+      // }
+      let filter = filters[i];
+      switch (filter[1]) {
+        case ">=":
+          if (arr[i][filter[0]] >= filter[2]) rez.push(arr[i]);
+          break;
+
+        case "<=":
+          if (arr[i][filter[0]] <= filter[2]) rez.push(arr[i]);
+          break;
+
+        case ">":
+          if (arr[i][filter[0]] > filter[2]) rez.push(arr[i]);
+          break;
+
+        case "<":
+          if (arr[i][filter[0]] < filter[2]) rez.push(arr[i]);
+          break;
+
+        case "==":
+          if (arr[i][filter[0]] == filter[2]) rez.push(arr[i]);
+          break;
+      }
+    }
+
+    console.log(rez)
+    return rez;
+  }
   // Read all documents in a collection
   async readDocuments(collectionName, condition, limitare) {
     let q;

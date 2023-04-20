@@ -64,6 +64,13 @@ function Shop({ addit }) {
     // console.log("arr", arr);
   };
 
+  const [filters, setFilters] = useState([]);
+
+  const updateFilters = async (e) => {
+    // setFilters((old) => [...old, [e[0], e[1], e[2]]]);
+    // console.log(filters);
+  };
+
   return (
     <>
       <div className="container-fluid">
@@ -102,6 +109,7 @@ function Shop({ addit }) {
                   <input
                     type="checkbox"
                     className="custom-control-input"
+                    onChange={()=>updateFilters(["pret", ""])}
                     id="price-1"
                   />
                   <label className="custom-control-label" htmlFor="price-1">
@@ -359,7 +367,7 @@ function Shop({ addit }) {
                         >
                           Nume - descrescator
                         </Link>
-                        
+
                         <Link
                           to={`/shop/${categorie}/rc`}
                           className="dropdown-item"
