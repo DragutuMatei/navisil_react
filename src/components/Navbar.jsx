@@ -198,9 +198,16 @@ function Navbar({ cos }) {
                   </Link>
 
                   {user && (
+                    <>
+                    
                     <Link to="/checkout" className="nav-item nav-link">
                       Checkout
+                      </Link>
+                    
+                      <Link to="/cart" className="nav-item nav-link">
+                      Cart
                     </Link>
+                    </>
                   )}
                 </div>
                 <div className="navbar-nav ml-auto py-0 d-none d-lg-block">

@@ -1,2 +1,2 @@
-sorting/filter
+sorting/filter (brand, pret, reducere, ?? )
 final form la comenzi

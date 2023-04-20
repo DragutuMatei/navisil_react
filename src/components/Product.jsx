@@ -35,7 +35,10 @@ async function getProduct(productId) {
    */
   // // console.log(user);
   return (
-    <div className="col-lg-3 col-md-4 col-sm-6 pb-1">
+    <div
+      className="col-lg-3 col-md-4 col-sm-6 pb-1"
+      style={{ overflow: "hidden" }}
+    >
       <div className="product-item bg-light mb-4">
         <div
           className="product-img position-relative overflow-hidden"
@@ -62,10 +65,7 @@ async function getProduct(productId) {
               </a>
             )}
 
-            <a
-              className="btn btn-outline-dark btn-square"
-              href={link}
-            >
+            <a className="btn btn-outline-dark btn-square" href={link}>
               <i className="fa fa-search"></i>
             </a>
           </div>

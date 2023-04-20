@@ -1,14 +1,40 @@
 import React, { useEffect, useState } from "react";
 import Firestore from "../js/Firestore";
-// import firebase from "firebase/compat/app";
-// import "firebase/storage";
-
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import Placeholder from "../util/Placeholder";
 
 const firestore = new Firestore();
 const storage = getStorage();
+const modules = {
+  toolbar: [
+    [{ header: [1, 2, false] }],
+    ["bold", "italic", "underline", "strike", "blockquote"],
+    [
+      { list: "ordered" },
+      { list: "bullet" },
+      { indent: "-1" },
+      { indent: "+1" },
+    ],
+    ["link", "image"],
+    ["clean"],
+  ],
+};
 
+const formats = [
+  "header",
+  "bold",
+  "italic",
+  "underline",
+  "strike",
+  "blockquote",
+  "list",
+  "bullet",
+  "indent",
+  "link",
+  "image",
+];
 function AdminPage() {
   //get categories
   const [mesajeContact, setMesajeContact] = useState([]);
@@ -288,6 +314,12 @@ function AdminPage() {
               </div>
             </div>
             <div className="descriereProdus">
+              {/* <ReactQuill
+                // value={content}
+                onChange={(e) => modifield("descriere_scurta", e)}
+                modules={modules}
+                formats={formats}
+              /> */}
               <textarea
                 name=""
                 id=""
