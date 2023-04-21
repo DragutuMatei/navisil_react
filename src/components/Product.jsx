@@ -32,7 +32,7 @@ async function getProduct(productId) {
    * 
    * 
    */
-  // // console.log(user);
+
   return (
     <div
       className="col-lg-3 col-md-4 col-sm-6 pb-1"
@@ -46,6 +46,7 @@ async function getProduct(productId) {
             display: "flex",
             justifyContent: "space-around",
             alignItems: "center",
+            overflow: "hidden",
           }}
         >
           <img

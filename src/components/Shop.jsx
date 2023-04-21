@@ -80,8 +80,8 @@ function Shop({ addit }) {
         .readDocuments("products", ["nume", [], categorie])
         .then(async (res) => {
           if (
-            localStorage.getItem("filters") !== "[]" &&
-            localStorage.getItem("filters")
+            localStorage.getItem("filters") &&
+            localStorage.getItem("filters") !== "[]"
           ) {
             filters = JSON.parse(localStorage.getItem("filters"));
 
@@ -96,8 +96,8 @@ function Shop({ addit }) {
     } else
       firestore.readDocuments("products", catt).then(async (res) => {
         if (
-          localStorage.getItem("filters") !== "[]" &&
-          localStorage.getItem("filters")
+          localStorage.getItem("filters") &&
+          localStorage.getItem("filters") !== "[]"
         ) {
           filters = JSON.parse(localStorage.getItem("filters"));
 
@@ -176,13 +176,35 @@ function Shop({ addit }) {
 
       localStorage.setItem("filters", JSON.stringify(filters));
 
-      await firestore.readDocuments("products", catt).then(async (res) => {
-        if (sort_param) {
-          sort(res, sort_param);
-        }
-        arr = res;
-        products = res;
-      });
+      // await firestore.readDocuments("products", catt).then(async (res) => {
+      //   if (sort_param) {
+      //     sort(res, sort_param);
+      //   }
+      //   arr = res;
+      //   products = res;
+      // });
+
+      if (categorie.includes("search")) {
+        //search ========== includes
+        firestore
+          .readDocuments("products", ["nume", [], categorie])
+          .then(async (res) => {
+            if (sort_param) {
+              sort(res, sort_param);
+            }
+            arr = res;
+            setProducts((old) => (old = res));
+          });
+      } else
+        firestore.readDocuments("products", catt).then(async (res) => {
+          if (sort_param) {
+            sort(res, sort_param);
+          }
+          arr = res;
+          setProducts((old) => (old = res));
+
+          // console.log(arr);
+        });
     }
     localStorage.setItem("filters", JSON.stringify(filters));
     localStorage.setItem("local_filters", JSON.stringify(local_filters));
@@ -206,21 +228,6 @@ function Shop({ addit }) {
   };
   const compareArrays = (a, b) => {
     return JSON.stringify(a) === JSON.stringify(b);
-  };
-
-  const isChecked = (id) => {
-    if (
-      localStorage.getItem("local_filters") !== "[]" &&
-      localStorage.getItem("local_filters")
-    ) {
-      let local_local_filters = JSON.parse(
-        localStorage.getItem("local_filters")
-      );
-      for (let i = 0; i < local_local_filters.length; i++) {
-        if (local_local_filters[i] == id) return true;
-      }
-    }
-    return false;
   };
 
   const reset = async () => {
