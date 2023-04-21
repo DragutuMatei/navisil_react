@@ -1,13 +1,6 @@
-sorting/filter (brand, pret, reducere, ?? )
+sorting/filter (pret, reducere, ?? ) 
+//caz special: daca 0-100 si 100-200 selectate => 0-200
 final form la comenzi
 key words
 o scurta descriere 
 
-
-[
-    ["pret", "==", pret],
-    ["pret", "==", pret],
-    ["pret", "==", pret],
-    ["pret", "==", pret],
-    ["pret", "==", pret]
-]

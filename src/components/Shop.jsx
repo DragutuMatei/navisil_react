@@ -47,8 +47,8 @@ function Shop({ addit }) {
   let [products, setProducts] = useState([]);
   const [filter_map, setf] = useState([]);
 
-  // let [catt, setCatt] = useState(["categories", "==", categorie]);
-  let catt = ["categories", "==", categorie];
+  // let catt = ["categories", "==", categorie];
+  let [catt, setCatt] = useState(["categories", "==", categorie]);
 
   useEffect(() => {
     setf(Object.entries(filter_arr));
@@ -70,10 +70,13 @@ function Shop({ addit }) {
 
   useEffect(() => {
     if (categorie == "reducere") catt = ["old_pret", ">", 0];
-  }, [catt]);
+    else catt = ["categories", "==", categorie];
+    console.log(catt);
+  }, [catt, categorie]);
 
   useEffect(() => {
     if (categorie == "reducere") catt = ["old_pret", ">", 0];
+    else catt = ["categories", "==", categorie];
     if (categorie.includes("search")) {
       //search ========== includes
       firestore
@@ -93,7 +96,8 @@ function Shop({ addit }) {
           arr = res;
           setProducts((old) => (old = res));
         });
-    } else
+    } else {
+      console.log("catt: ", catt);
       firestore.readDocuments("products", catt).then(async (res) => {
         if (
           localStorage.getItem("filters") &&
@@ -111,6 +115,7 @@ function Shop({ addit }) {
 
         // console.log(arr);
       });
+    }
   }, [categorie, sort_param]);
 
   const sort = async (arr, cat, nope) => {
@@ -137,7 +142,7 @@ function Shop({ addit }) {
         arr.sort((a, b) => b.rating - a.rating);
         break;
     }
-    if (nope !== "ok") setProducts([...arr]);
+    if (nope !== "ok") setProducts((old) => [...arr]);
 
     // console.log("products", products);
     // console.log("arr", arr);
@@ -156,7 +161,9 @@ function Shop({ addit }) {
   const updateFilters = async (arr, filters) => {
     await firestore.filter(arr, filters).then((res) => {
       arr = res;
+      console.log(res);
     });
+
     return arr;
   };
 
@@ -183,7 +190,9 @@ function Shop({ addit }) {
       //   arr = res;
       //   products = res;
       // });
-
+      if (categorie == "reducere") catt = ["old_pret", ">", 0];
+      else catt = ["categories", "==", categorie];
+      console.log(catt);
       if (categorie.includes("search")) {
         //search ========== includes
         firestore
@@ -192,7 +201,8 @@ function Shop({ addit }) {
             if (sort_param) {
               sort(res, sort_param);
             }
-            arr = res;
+            res = await updateFilters(res, filters);
+
             setProducts((old) => (old = res));
           });
       } else
@@ -200,23 +210,33 @@ function Shop({ addit }) {
           if (sort_param) {
             sort(res, sort_param);
           }
-          arr = res;
+
+          res = await updateFilters(res, filters);
+
           setProducts((old) => (old = res));
+          console.log(res, products);
+          products = res;
+          console.log(res, products);
 
           // console.log(arr);
         });
     }
+
     localStorage.setItem("filters", JSON.stringify(filters));
     localStorage.setItem("local_filters", JSON.stringify(local_filters));
-
+    console.log("products: ", products);
     const rasp = await updateFilters(products, filters);
+    console.log("rasp", rasp);
+    console.log(filters);
+
     if (rasp !== false) {
-      console.log("rasp", rasp);
       if (sort_param) {
         sort(rasp, sort_param, "ok");
       }
-      setProducts(rasp);
+      setProducts((old) => (old = rasp));
     } else {
+      if (categorie == "reducere") catt = ["old_pret", ">", 0];
+      else catt = ["categories", "==", categorie];
       await firestore.readDocuments("products", catt).then(async (res) => {
         if (sort_param) {
           sort(res, sort_param);
@@ -237,29 +257,39 @@ function Shop({ addit }) {
     filters = [];
     local_filters = [];
     if (localStorage.getItem("local_filters")) {
-      localStorage.removeItem("local_filters");
+      localStorage.setItem("local_filters", "[]");
     }
 
     if (localStorage.getItem("filters")) {
-      localStorage.removeItem("filters");
+      localStorage.setItem("filters", "[]");
     }
-    const rasp = await updateFilters(products, filters);
-    if (rasp !== false) {
-      if (sort_param) {
-        sort(rasp, sort_param, "ok");
-      }
-      setProducts(rasp);
-    } else {
-      await firestore.readDocuments("products", catt).then(async (res) => {
-        if (sort_param) {
-          sort(res, sort_param);
-        }
-        arr = res;
-        setProducts((old) => (old = res));
+    // const rasp = await updateFilters(products, filters);
+    // if (rasp !== false) {
+    //   if (sort_param) {
+    //     sort(rasp, sort_param, "ok");
+    //   }
+    //   setProducts((old) => (old = rasp));
+    // } else {
+    //   await firestore.readDocuments("products", catt).then(async (res) => {
+    //     if (sort_param) {
+    //       sort(res, sort_param);
+    //     }
+    //     arr = res;
+    //     setProducts((old) => (old = res));
+    //     products = res;
+    //     // console.log(arr);
+    //   });
+    // }
 
-        // console.log(arr);
-      });
-    }
+    if (categorie == "reducere") catt = ["old_pret", ">", 0];
+    else catt = ["categories", "==", categorie];
+    await firestore.readDocuments("products", catt).then(async (res) => {
+      if (sort_param) {
+        sort(res, sort_param);
+      }
+      arr = res;
+      setProducts((old) => (old = res));
+    });
   };
 
   return (
