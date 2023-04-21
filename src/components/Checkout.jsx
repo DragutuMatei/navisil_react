@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import emailjs from "@emailjs/browser";
 import Firestore from "../js/Firestore";
 import { getAuth } from "@firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -10,6 +11,7 @@ const auth = getAuth();
 
 function Checkout({ addit }) {
   let ship = 10;
+  const form = useRef();
   const [user, loading, error] = useAuthState(auth);
   const [products, setP] = useState([]);
   const [total, setTotal] = useState(0);
@@ -33,6 +35,32 @@ function Checkout({ addit }) {
   useEffect(() => {
     ok();
   }, [user]);
+
+  const sendEmail = async (e) => {
+    e.preventDefault();
+    console.log(form.current);
+
+    await emailjs
+      .sendForm(
+        "service_ea5w2pg",
+        "template_z989gy9",
+        form.current,
+        "user_3dO0i6OPdpXqoxoHSNrwB"
+      )
+      .then(
+        (result) => {
+          console.log(result);
+          if (result.status == 200) alert("comanda plasata");
+          else {
+            alert("a intervenit o problema la plasarea comenzii");
+          }
+        },
+        (error) => {
+          console.log(error.text);
+          alert(error.text);
+        }
+      );
+  };
 
   return (
     <>
@@ -93,7 +121,7 @@ function Checkout({ addit }) {
             </div>
           </div>
         </div>
-        <div className="row px-xl-5">
+        <form ref={form} onSubmit={sendEmail} className="row px-xl-5">
           <div className="col-lg-8">
             <h5 className="section-title position-relative text-uppercase mb-3">
               <span className="bg-secondary pr-3">Billing Address</span>
@@ -105,12 +133,14 @@ function Checkout({ addit }) {
                   <input
                     className="form-control"
                     type="text"
+                    name="first_name"
                     placeholder="John"
                   />
                 </div>
                 <div className="col-md-6 form-group">
                   <label>Last Name</label>
                   <input
+                    name="last_name"
                     className="form-control"
                     type="text"
                     placeholder="Doe"
@@ -121,6 +151,7 @@ function Checkout({ addit }) {
                   <input
                     className="form-control"
                     type="text"
+                    name="email"
                     placeholder="example@email.com"
                   />
                 </div>
@@ -129,12 +160,14 @@ function Checkout({ addit }) {
                   <input
                     className="form-control"
                     type="text"
+                    name="tel"
                     placeholder="+123 456 789"
                   />
                 </div>
                 <div className="col-md-6 form-group">
                   <label>Address Line 1</label>
                   <input
+                    name="adress1"
                     className="form-control"
                     type="text"
                     placeholder="123 Street"
@@ -143,6 +176,7 @@ function Checkout({ addit }) {
                 <div className="col-md-6 form-group">
                   <label>Address Line 2</label>
                   <input
+                    name="adress2"
                     className="form-control"
                     type="text"
                     placeholder="123 Street"
@@ -154,6 +188,7 @@ function Checkout({ addit }) {
                   <input
                     className="form-control"
                     type="text"
+                    name="oras"
                     placeholder="New York"
                   />
                 </div>
@@ -162,12 +197,14 @@ function Checkout({ addit }) {
                   <input
                     className="form-control"
                     type="text"
+                    name="zip"
                     placeholder="123"
                   />
                 </div>
                 <div className="col-md-12">
                   <div className="custom-control custom-checkbox">
                     <input
+                      name="diff"
                       type="checkbox"
                       className="custom-control-input"
                       id="shipto"
@@ -193,6 +230,7 @@ function Checkout({ addit }) {
                   <div className="col-md-6 form-group">
                     <label>First Name</label>
                     <input
+                      name="nume1"
                       className="form-control"
                       type="text"
                       placeholder="John"
@@ -203,12 +241,14 @@ function Checkout({ addit }) {
                     <input
                       className="form-control"
                       type="text"
+                      name="nume2"
                       placeholder="Doe"
                     />
                   </div>
                   <div className="col-md-6 form-group">
                     <label>E-mail</label>
                     <input
+                      name="email2"
                       className="form-control"
                       type="text"
                       placeholder="example@email.com"
@@ -218,6 +258,7 @@ function Checkout({ addit }) {
                     <label>Mobile No</label>
                     <input
                       className="form-control"
+                      name="tel2"
                       type="text"
                       placeholder="+123 456 789"
                     />
@@ -227,6 +268,7 @@ function Checkout({ addit }) {
                     <input
                       className="form-control"
                       type="text"
+                      name="adress11"
                       placeholder="123 Street"
                     />
                   </div>
@@ -234,6 +276,7 @@ function Checkout({ addit }) {
                     <label>Address Line 2</label>
                     <input
                       className="form-control"
+                      name="adress12"
                       type="text"
                       placeholder="123 Street"
                     />
@@ -244,6 +287,7 @@ function Checkout({ addit }) {
                     <input
                       className="form-control"
                       type="text"
+                      name="oras1"
                       placeholder="New York"
                     />
                   </div>
@@ -251,6 +295,7 @@ function Checkout({ addit }) {
                     <label>ZIP Code</label>
                     <input
                       className="form-control"
+                      name="zip1"
                       type="text"
                       placeholder="123"
                     />
@@ -274,7 +319,7 @@ function Checkout({ addit }) {
                     <input
                       type="radio"
                       className="custom-control-input"
-                      name="payment"
+                      name="paypal"
                       id="paypal"
                     />
                     <label className="custom-control-label" htmlFor="paypal">
@@ -287,7 +332,7 @@ function Checkout({ addit }) {
                     <input
                       type="radio"
                       className="custom-control-input"
-                      name="payment"
+                      name="direct"
                       id="directcheck"
                     />
                     <label
@@ -303,7 +348,7 @@ function Checkout({ addit }) {
                     <input
                       type="radio"
                       className="custom-control-input"
-                      name="payment"
+                      name="transfer"
                       id="banktransfer"
                     />
                     <label
@@ -314,13 +359,16 @@ function Checkout({ addit }) {
                     </label>
                   </div>
                 </div>
-                <button className="btn btn-block btn-primary font-weight-bold py-3">
+                <button
+                  type="submit"
+                  className="btn btn-block btn-primary font-weight-bold py-3"
+                >
                   Place Order
                 </button>
               </div>
             </div>
           </div>
-        </div>
+        </form>
       </div>
 
       <a href="#" className="btn btn-primary back-to-top">

@@ -1,41 +1,119 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Firestore from "../js/Firestore";
-import Product from "./Product";
 import Text from "../util/Text";
+import Product from "./Product";
+
 let arr = [];
+// [
+//   [
+//     ["pret", ">=", 100],
+//     ["pret", "<=", 200],
+//   ],
+//   [
+//     ["pret", ">=", 200],
+//     ["pret", "<=", 300],
+//   ],
+// ];
 const firestore = new Firestore();
+let filters = [];
+let local_filters = [];
+const filter_arr = {
+  "0-100": [
+    ["pret", ">=", 0],
+    ["pret", "<=", 100],
+  ],
+  "100-200": [
+    ["pret", ">=", 100],
+    ["pret", "<=", 200],
+  ],
+  "200-300": [
+    ["pret", ">=", 200],
+    ["pret", "<=", 300],
+  ],
+  "300-400": [
+    ["pret", ">=", 300],
+    ["pret", "<=", 400],
+  ],
+  "400-500": [
+    ["pret", ">=", 400],
+    ["pret", "<=", 500],
+  ],
+  "over-500": [["pret", ">=", 500]],
+};
+
 function Shop({ addit }) {
   const { categorie, sort_param } = useParams();
-  const [products, setProducts] = useState([]);
+  let [products, setProducts] = useState([]);
+  const [filter_map, setf] = useState([]);
+
+  // let [catt, setCatt] = useState(["categories", "==", categorie]);
+  let catt = ["categories", "==", categorie];
+
   useEffect(() => {
+    setf(Object.entries(filter_arr));
+    if (
+      localStorage.getItem("local_filters") &&
+      localStorage.getItem("local_filters") !== "[]"
+    ) {
+      local_filters = JSON.parse(localStorage.getItem("local_filters"));
+    }
+    if (
+      localStorage.getItem("filters") &&
+      localStorage.getItem("filters") !== "[]"
+    ) {
+      filters = JSON.parse(localStorage.getItem("filters"));
+    }
+    console.log(filters);
     window.scrollTo(0, 0);
   }, []);
+
   useEffect(() => {
+    if (categorie == "reducere") catt = ["old_pret", ">", 0];
+  }, [catt]);
+
+  useEffect(() => {
+    if (categorie == "reducere") catt = ["old_pret", ">", 0];
     if (categorie.includes("search")) {
       //search ========== includes
       firestore
         .readDocuments("products", ["nume", [], categorie])
-        .then((res) => {
+        .then(async (res) => {
+          if (
+            localStorage.getItem("filters") !== "[]" &&
+            localStorage.getItem("filters")
+          ) {
+            filters = JSON.parse(localStorage.getItem("filters"));
+
+            res = await updateFilters(res, filters);
+          }
           if (sort_param) {
             sort(res, sort_param);
           }
           arr = res;
-          setProducts(res);
+          setProducts((old) => (old = res));
         });
     } else
-      firestore
-        .readDocuments("products", ["categories", "==", categorie])
-        .then((res) => {
-          if (sort_param) {
-            sort(res, sort_param);
-          }
-          arr = res;
-          setProducts(res);
-        });
+      firestore.readDocuments("products", catt).then(async (res) => {
+        if (
+          localStorage.getItem("filters") !== "[]" &&
+          localStorage.getItem("filters")
+        ) {
+          filters = JSON.parse(localStorage.getItem("filters"));
+
+          res = await updateFilters(res, filters);
+        }
+        if (sort_param) {
+          sort(res, sort_param);
+        }
+        arr = res;
+        setProducts((old) => (old = res));
+
+        // console.log(arr);
+      });
   }, [categorie, sort_param]);
 
-  const sort = async (arr, cat) => {
+  const sort = async (arr, cat, nope) => {
     switch (cat) {
       case "pc":
         // console.log("pc acum");
@@ -59,16 +137,122 @@ function Shop({ addit }) {
         arr.sort((a, b) => b.rating - a.rating);
         break;
     }
-    setProducts([...arr]);
+    if (nope !== "ok") setProducts([...arr]);
+
     // console.log("products", products);
     // console.log("arr", arr);
   };
 
-  const [filters, setFilters] = useState([]);
+  // const [filters, setFilters] = useState([
+  // ["old_pret", "==", 0],
+  /**
+   *  [ "brand", "==", "dero" ]
+   */
+  // ]);
+  // useEffect(() => {
+  //   console.log(filters);
+  // }, filters);
 
-  const updateFilters = async (e) => {
-    // setFilters((old) => [...old, [e[0], e[1], e[2]]]);
-    // console.log(filters);
+  const updateFilters = async (arr, filters) => {
+    await firestore.filter(arr, filters).then((res) => {
+      arr = res;
+    });
+    return arr;
+  };
+
+  const addFilter = async (e, id) => {
+    const check = e.target.checked;
+    console.log(check);
+
+    if (check) {
+      console.log("==================ADAUGARE====================");
+      filters = [...filters, { [id]: filter_arr[id] }];
+      local_filters = [...local_filters, id];
+    } else {
+      console.log("==================MARS====================");
+
+      filters = filters.filter((f) => !compareArrays(f[id], filter_arr[id]));
+      local_filters = local_filters.filter((f) => f !== id);
+
+      localStorage.setItem("filters", JSON.stringify(filters));
+
+      await firestore.readDocuments("products", catt).then(async (res) => {
+        if (sort_param) {
+          sort(res, sort_param);
+        }
+        arr = res;
+        products = res;
+      });
+    }
+    localStorage.setItem("filters", JSON.stringify(filters));
+    localStorage.setItem("local_filters", JSON.stringify(local_filters));
+
+    const rasp = await updateFilters(products, filters);
+    if (rasp !== false) {
+      console.log("rasp", rasp);
+      if (sort_param) {
+        sort(rasp, sort_param, "ok");
+      }
+      setProducts(rasp);
+    } else {
+      await firestore.readDocuments("products", catt).then(async (res) => {
+        if (sort_param) {
+          sort(res, sort_param);
+        }
+        arr = res;
+        setProducts((old) => (old = res));
+      });
+    }
+  };
+  const compareArrays = (a, b) => {
+    return JSON.stringify(a) === JSON.stringify(b);
+  };
+
+  const isChecked = (id) => {
+    if (
+      localStorage.getItem("local_filters") !== "[]" &&
+      localStorage.getItem("local_filters")
+    ) {
+      let local_local_filters = JSON.parse(
+        localStorage.getItem("local_filters")
+      );
+      for (let i = 0; i < local_local_filters.length; i++) {
+        if (local_local_filters[i] == id) return true;
+      }
+    }
+    return false;
+  };
+
+  const reset = async () => {
+    document.querySelectorAll("input[type='checkbox']").forEach((input) => {
+      input.checked = false;
+    });
+    filters = [];
+    local_filters = [];
+    if (localStorage.getItem("local_filters")) {
+      localStorage.removeItem("local_filters");
+    }
+
+    if (localStorage.getItem("filters")) {
+      localStorage.removeItem("filters");
+    }
+    const rasp = await updateFilters(products, filters);
+    if (rasp !== false) {
+      if (sort_param) {
+        sort(rasp, sort_param, "ok");
+      }
+      setProducts(rasp);
+    } else {
+      await firestore.readDocuments("products", catt).then(async (res) => {
+        if (sort_param) {
+          sort(res, sort_param);
+        }
+        arr = res;
+        setProducts((old) => (old = res));
+
+        // console.log(arr);
+      });
+    }
   };
 
   return (
@@ -92,76 +276,48 @@ function Shop({ addit }) {
             <h5 className="section-title position-relative text-uppercase mb-3">
               <span className="bg-secondary pr-3">Filter by price</span>
             </h5>
+            <button className="btn btn-primary" onClick={reset}>
+              Reset all filters
+            </button>
             <div className="bg-light p-4 mb-30">
-              <form>
-                <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                  <input
-                    type="checkbox"
-                    className="custom-control-input"
-                    id="price-all"
-                  />
-                  <label className="custom-control-label" htmlFor="price-all">
-                    All Price
-                  </label>
-                  <span className="badge border font-weight-normal">1000</span>
-                </div>
-                <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                  <input
-                    type="checkbox"
-                    className="custom-control-input"
-                    onChange={()=>updateFilters(["pret", ""])}
-                    id="price-1"
-                  />
-                  <label className="custom-control-label" htmlFor="price-1">
-                    $0 - $100
-                  </label>
-                  <span className="badge border font-weight-normal">150</span>
-                </div>
-                <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                  <input
-                    type="checkbox"
-                    className="custom-control-input"
-                    id="price-2"
-                  />
-                  <label className="custom-control-label" htmlFor="price-2">
-                    $100 - $200
-                  </label>
-                  <span className="badge border font-weight-normal">295</span>
-                </div>
-                <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                  <input
-                    type="checkbox"
-                    className="custom-control-input"
-                    id="price-3"
-                  />
-                  <label className="custom-control-label" htmlFor="price-3">
-                    $200 - $300
-                  </label>
-                  <span className="badge border font-weight-normal">246</span>
-                </div>
-                <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                  <input
-                    type="checkbox"
-                    className="custom-control-input"
-                    id="price-4"
-                  />
-                  <label className="custom-control-label" htmlFor="price-4">
-                    $300 - $400
-                  </label>
-                  <span className="badge border font-weight-normal">145</span>
-                </div>
-                <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                  <input
-                    type="checkbox"
-                    className="custom-control-input"
-                    id="price-5"
-                  />
-                  <label className="custom-control-label" htmlFor="price-5">
-                    $400 - $500
-                  </label>
-                  <span className="badge border font-weight-normal">168</span>
-                </div>
-              </form>
+              <div>
+                {filter_map.map((filter, index) => {
+                  let ar = filter[0].split("-");
+                  // console.log(local_filters, index, filter[0]);
+                  // if (index == 5) {
+                  //   for (let i = 0; i < local_filters.length; i++) {
+                  //     let id = local_filters[i];
+                  //     console.log(Object.keys(id)[0]);
+                  //   }
+                  // }
+
+                  return (
+                    <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                      <input
+                        checked={
+                          local_filters.find((id) => id == filter[0])
+                            ? true
+                            : false
+                        }
+                        type="checkbox"
+                        className="custom-control-input"
+                        onChange={(e) => addFilter(e, filter[0])}
+                        // data-filter={filter[0]}
+                        id={`price-${index}`}
+                      />
+                      <label
+                        className="custom-control-label"
+                        htmlFor={`price-${index}`}
+                      >
+                        {index <= 5 &&
+                          (ar[0] === "over" ? "> " : "$" + ar[0] + " - ") +
+                            "$" +
+                            ar[1]}
+                      </label>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
 
             <h5 className="section-title position-relative text-uppercase mb-3">
@@ -172,68 +328,68 @@ function Shop({ addit }) {
                 <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                   <input
                     type="checkbox"
+                    //                    )}
                     className="custom-control-input"
                     id="color-all"
                   />
                   <label className="custom-control-label" htmlFor="price-all">
                     All Color
                   </label>
-                  <span className="badge border font-weight-normal">1000</span>
                 </div>
                 <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                   <input
                     type="checkbox"
+                    //                    )}
                     className="custom-control-input"
                     id="color-1"
                   />
                   <label className="custom-control-label" htmlFor="color-1">
                     Black
                   </label>
-                  <span className="badge border font-weight-normal">150</span>
                 </div>
                 <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                   <input
                     type="checkbox"
+                    //                    )}
                     className="custom-control-input"
                     id="color-2"
                   />
                   <label className="custom-control-label" htmlFor="color-2">
                     White
                   </label>
-                  <span className="badge border font-weight-normal">295</span>
                 </div>
                 <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                   <input
                     type="checkbox"
+                    //                    )}
                     className="custom-control-input"
                     id="color-3"
                   />
                   <label className="custom-control-label" htmlFor="color-3">
                     Red
                   </label>
-                  <span className="badge border font-weight-normal">246</span>
                 </div>
                 <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                   <input
                     type="checkbox"
+                    //                    )}
                     className="custom-control-input"
                     id="color-4"
                   />
                   <label className="custom-control-label" htmlFor="color-4">
                     Blue
                   </label>
-                  <span className="badge border font-weight-normal">145</span>
                 </div>
                 <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between">
                   <input
                     type="checkbox"
+                    //                    )}
                     className="custom-control-input"
                     id="color-5"
                   />
                   <label className="custom-control-label" htmlFor="color-5">
                     Green
                   </label>
-                  <span className="badge border font-weight-normal">168</span>
                 </div>
               </form>
             </div>
@@ -246,68 +402,68 @@ function Shop({ addit }) {
                 <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                   <input
                     type="checkbox"
+                    //                    )}
                     className="custom-control-input"
                     id="size-all"
                   />
                   <label className="custom-control-label" htmlFor="size-all">
                     All Size
                   </label>
-                  <span className="badge border font-weight-normal">1000</span>
                 </div>
                 <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                   <input
                     type="checkbox"
+                    //                    )}
                     className="custom-control-input"
                     id="size-1"
                   />
                   <label className="custom-control-label" htmlFor="size-1">
                     XS
                   </label>
-                  <span className="badge border font-weight-normal">150</span>
                 </div>
                 <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                   <input
                     type="checkbox"
+                    //                    )}
                     className="custom-control-input"
                     id="size-2"
                   />
                   <label className="custom-control-label" htmlFor="size-2">
                     S
                   </label>
-                  <span className="badge border font-weight-normal">295</span>
                 </div>
                 <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                   <input
                     type="checkbox"
+                    //                    )}
                     className="custom-control-input"
                     id="size-3"
                   />
                   <label className="custom-control-label" htmlFor="size-3">
                     M
                   </label>
-                  <span className="badge border font-weight-normal">246</span>
                 </div>
                 <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                   <input
                     type="checkbox"
+                    //                    )}
                     className="custom-control-input"
                     id="size-4"
                   />
                   <label className="custom-control-label" htmlFor="size-4">
                     L
                   </label>
-                  <span className="badge border font-weight-normal">145</span>
                 </div>
                 <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between">
                   <input
                     type="checkbox"
+                    //                    )}
                     className="custom-control-input"
                     id="size-5"
                   />
                   <label className="custom-control-label" htmlFor="size-5">
                     XL
                   </label>
-                  <span className="badge border font-weight-normal">168</span>
                 </div>
               </form>
             </div>
@@ -317,13 +473,16 @@ function Shop({ addit }) {
             <div className="row pb-3 products">
               <div className="col-12 pb-1">
                 <div className="d-flex align-items-center justify-content-between mb-4">
-                  <div>
-                    <button className="btn btn-sm btn-light">
-                      <i className="fa fa-th-large"></i>
-                    </button>
-                    <button className="btn btn-sm btn-light ml-2">
-                      <i className="fa fa-bars"></i>
-                    </button>
+                  <div className="d-flex align-items-center justify-content-between ">
+                    <h5>
+                      {products && products.length}
+                      {" - "}{" "}
+                      {products && products.length == 1 ? (
+                        <>Produs</>
+                      ) : (
+                        <>Produse</>
+                      )}
+                    </h5>
                   </div>
                   <div className="ml-2">
                     <div className="btn-group">
@@ -380,8 +539,8 @@ function Shop({ addit }) {
                   </div>
                 </div>
               </div>
-              {arr &&
-                arr.map((prod) => (
+              {products && products != [] ? (
+                products.map((prod) => (
                   <Product
                     key={prod.id}
                     id={prod.id}
@@ -393,7 +552,10 @@ function Shop({ addit }) {
                     oldPrice={prod.old_pret}
                     rating={prod.rating}
                   />
-                ))}
+                ))
+              ) : (
+                <span className="loader"></span>
+              )}
             </div>
           </div>
         </div>

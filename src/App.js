@@ -69,7 +69,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home addit={addit} />} />
         <Route
-          path="/shop/:categorie/:sort_param?"
+          path="/shop/:categorie/:sort_param?/:price?"
           element={<Shop addit={addit} />}
         />
         <Route path="/prod/:id" element={<ProductPage addit={addit} />} />

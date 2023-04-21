@@ -28,39 +28,16 @@ function Navbar({ cos }) {
   const [user, loading, error] = useAuthState(auth);
   const [categories, setCategories] = useState([]);
   const getCategories = async () => {
-   await firestore.readDocuments("categories").then((res) => {
+    await firestore.readDocuments("categories").then((res) => {
       setCategories(res);
-      // console.log(res);
     });
   };
 
   const { width } = useWindowSize();
 
-  // const getCos = async () => {
-  //   let cant = 0;
-  //   if (user) {
-  //     await firestore
-  //       .readDocuments("cos", ["user_id", "==", user.uid])
-  //       .then((res) => {
-  //         // // console.log(res);
-  //         for (let i = 0; i < res.length; i++) {
-  //           cant += res[i].cantitate;
-  //         }
-  //         setcos(cant);
-  //       });
-  //   } else {
-  //     setcos(0);
-  //   }
-  //   // console.log("cant ", cant);
-  // };
-
   useEffect(() => {
     getCategories();
   }, []);
-
-  useEffect(() => {
-    // getCos();
-  }, [, user]);
 
   const signInWithGoogle = async () => {
     await firestore.signInWithGoogle();
@@ -70,12 +47,11 @@ function Navbar({ cos }) {
     await firestore.logout();
   };
   const navigate = useNavigate();
-  // // console.log(user);
 
   const [search, setSearch] = useState("");
   const searchfct = () => {
     const link = "/shop/search" + search;
-    navigate(link)
+    navigate(link);
     // window.href = link;
   };
   return (
@@ -134,7 +110,7 @@ function Navbar({ cos }) {
                   )}
                   <img
                     src={user.photoURL}
-                    style={{ borderRadius: "50%", width: 20 }}
+                    style={{ borderRadius: "50%", width: 30 }}
                   />
                   <h4
                     style={{
@@ -199,14 +175,13 @@ function Navbar({ cos }) {
 
                   {user && (
                     <>
-                    
-                    <Link to="/checkout" className="nav-item nav-link">
-                      Checkout
+                      <Link to="/checkout" className="nav-item nav-link">
+                        Checkout
                       </Link>
-                    
+
                       <Link to="/cart" className="nav-item nav-link">
-                      Cart
-                    </Link>
+                        Cart
+                      </Link>
                     </>
                   )}
                 </div>
@@ -242,6 +217,12 @@ function Navbar({ cos }) {
               style={{ width: "100%", zIndex: "999" }}
             >
               <div className="navbar-nav w-100 categories">
+                <Link
+                  to={`/shop/reducere`}
+                  className="nav-item nav-link"
+                >
+                  Reducere
+                </Link>
                 {categories &&
                   categories.map((cat) => (
                     <Link

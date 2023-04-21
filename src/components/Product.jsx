@@ -7,7 +7,6 @@ import Placeholder from "../util/Placeholder";
 const firestore = new Firestore();
 function Product({ img, link, name, price, oldPrice, id, addit, rating }) {
   const [user, loading, error] = useAuthState(firestore.getuser());
-
   const addit_prod = async (cant) => {
     addit(id, cant);
   };
@@ -76,7 +75,7 @@ async function getProduct(productId) {
           </a>
           <div className="d-flex align-items-center justify-content-center mt-2">
             <h5>${price}</h5>
-            {oldPrice != undefined && oldPrice != 0 && (
+            {oldPrice > 0 && (
               <h6 className="text-muted ml-2">
                 <del>${oldPrice}</del>
               </h6>

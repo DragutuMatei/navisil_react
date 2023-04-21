@@ -222,39 +222,48 @@ export default class Firestore {
     }
   }
 
-  async filter(products, filters) {
+  async getReducere() {
+    return await this.readDocuments("products", ["old_pret", ">", 0]);
+  }
+
+  async filter(products, filterss) {
     let arr = products;
-    let rez = [];
+
+    const filters = filterss.reduce((acc, curr) => {
+      return [...acc, ...Object.values(curr)];
+    }, []);
+
     for (let i = 0; i < filters.length; i++) {
-      // for (let j = 0; j < arr.length; j++){
-      // }
       let filter = filters[i];
-      switch (filter[1]) {
-        case ">=":
-          if (arr[i][filter[0]] >= filter[2]) rez.push(arr[i]);
-          break;
+      for (let j = 0; j < filter.length; j++) {
+        switch (filter[j][1]) {
+          case ">=":
+            arr = arr.filter((a) => a[filter[j][0]] >= filter[j][2]);
+            break;
 
-        case "<=":
-          if (arr[i][filter[0]] <= filter[2]) rez.push(arr[i]);
-          break;
+          case "<=":
+            // if (arr[i][filter[0]] <= filter[2]) rez.push(arr[i]);
+            arr = arr.filter((a) => a[filter[j][0]] <= filter[j][2]);
+            break;
+          case ">":
+            arr = arr.filter((a) => a[filter[j][0]] > filter[j][2]);
 
-        case ">":
-          if (arr[i][filter[0]] > filter[2]) rez.push(arr[i]);
-          break;
+            break;
 
-        case "<":
-          if (arr[i][filter[0]] < filter[2]) rez.push(arr[i]);
-          break;
+          case "<":
+            arr = arr.filter((a) => a[filter[j][0]] < filter[j][2]);
+            break;
 
-        case "==":
-          if (arr[i][filter[0]] == filter[2]) rez.push(arr[i]);
-          break;
+          case "==":
+            arr = arr.filter((a) => a[filter[0]] == filter[2]);
+            break;
+        }
       }
     }
-
-    console.log(rez)
-    return rez;
+    if (filters.length == 0) return false;
+    return arr;
   }
+
   // Read all documents in a collection
   async readDocuments(collectionName, condition, limitare) {
     let q;
@@ -264,7 +273,7 @@ export default class Firestore {
     } else if (
       condition !== undefined &&
       limitare == undefined &&
-      (typeof condition[2] !== "string" || typeof condition[2] !== "number") &&
+      ( typeof condition[2] !== "number") &&
       condition[2].includes("search")
     ) {
       q = query(collection(this.db, collectionName));
