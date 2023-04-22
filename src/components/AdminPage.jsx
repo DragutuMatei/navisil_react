@@ -1,40 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Firestore from "../js/Firestore";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import Placeholder from "../util/Placeholder";
 
 const firestore = new Firestore();
 const storage = getStorage();
-const modules = {
-  toolbar: [
-    [{ header: [1, 2, false] }],
-    ["bold", "italic", "underline", "strike", "blockquote"],
-    [
-      { list: "ordered" },
-      { list: "bullet" },
-      { indent: "-1" },
-      { indent: "+1" },
-    ],
-    ["link", "image"],
-    ["clean"],
-  ],
-};
 
-const formats = [
-  "header",
-  "bold",
-  "italic",
-  "underline",
-  "strike",
-  "blockquote",
-  "list",
-  "bullet",
-  "indent",
-  "link",
-  "image",
-];
 function AdminPage() {
   //get categories
   const [mesajeContact, setMesajeContact] = useState([]);
@@ -258,6 +229,15 @@ function AdminPage() {
       getCategories();
       alert("Categorie stearsa");
     });
+  };
+
+  const setLasts = async () => {
+    await firestore
+      .readDocuments("products", ["cantitate", "<=", 40])
+      .then((res) => {
+        console.log(res);
+        setProducts(res);
+      });
   };
 
   return (
@@ -520,6 +500,20 @@ function AdminPage() {
           )}
           <hr />
           <br />
+          <button onClick={setLasts}>
+            Arata produsele cu cantitatea {"<"} 30{" "}
+          </button>
+          <button onClick={getProducts}>Arata toate produsele</button>
+          <button
+            onClick={async () => {
+              await firestore.readDocuments("products").then((res) => {
+                res.sort((a, b) => b.rating - a.rating);
+                setProducts(res);
+              });
+            }}
+          >
+            Arata cele mai apreciate produse produsele
+          </button>
           <br />
           <h1>Produse: </h1>
           {products &&
