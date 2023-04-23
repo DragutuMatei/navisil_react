@@ -50,7 +50,6 @@ function AdminPage() {
     getProducts();
   }, []);
   const delete_rev = async (rev) => {
-    // console.log(rev);
     await firestore.deleteRev({ rev, id: rev.id }).then((res) => {
       getProducts();
     });

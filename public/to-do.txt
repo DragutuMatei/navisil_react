@@ -1,6 +1,6 @@
 sorting/filter (pret, reducere, ?? ) 
 //caz special: daca 0-100 si 100-200 selectate => 0-200
-final form la comenzi
+final form la comenzi -doar plata mai e
 key words
 o scurta descriere 
-
+loading

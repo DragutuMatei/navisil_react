@@ -16,7 +16,7 @@ function Checkout({ addit }) {
   const [products, setP] = useState([]);
   const [total, setTotal] = useState(0);
   const [value, setValue] = useState(1);
-
+  const [hidden, setHidden] = useState([]);
   const modi = (by) => {
     if ((value >= 1 && by > 0) || value >= 2) setValue((old) => old + by);
   };
@@ -30,6 +30,15 @@ function Checkout({ addit }) {
     // console.log(user);
     let resp = await firestore.getProductByUser(user);
     setP(resp.cant);
+    console.log(resp.cant);
+    setHidden([]);
+    resp.cant.map((res) => {
+      // console.log({ cant: res.cant, pret: res.pret, name: res.nume });
+      setHidden((old) => [
+        ...old,
+        { cant: res.cant, pret: res.pret, name: res.nume },
+      ]);
+    });
     setTotal(resp.total);
   };
   useEffect(() => {
@@ -38,13 +47,80 @@ function Checkout({ addit }) {
 
   const sendEmail = async (e) => {
     e.preventDefault();
-    console.log(form.current);
+    console.log(hidden);
+
+    let a = `<div>
+    <h3>Products: </h3>
+    <ul>`;
+    hidden.map((h) => {
+      a += `<li>  ${JSON.stringify(h.name)}: ${JSON.stringify(h.cant)} x 
+       ${JSON.stringify(h.pret)} </li>`;
+    });
+
+    const {
+      first_name,
+      last_name,
+      email,
+      tel,
+      adress1,
+      adress2,
+      oras,
+      zip,
+      diff,
+      nume1,
+      nume2,
+      email2,
+      tel2,
+      adress11,
+      adress12,
+      oras1,
+      zip1,
+      paypal,
+      direct,
+      transfer,
+    } = form.current.elements;
+
+    a += `</ul>
+          <h3>email: <span>${email.value}</span> </h3>
+          <h3>tel: <span>${tel.value}</span></h3>
+          <h3>adress: <span>${adress1.value}, ${adress2.value}</span></h3>
+          <h3>oras: <span>${oras.value}</span></h3>
+          <h3>zip: <span>${zip.value}</span></h3>
+          <br/>
+          ${
+            diff.checked
+              ? `
+          <h3>Ship to a diff adress? <span>${diff.checked}</span></h3>
+          <h3>shipping to:
+          <h3>nume: <span>${nume1.value} ${nume2.value}</span></h3>
+          <h3>email: <span>${email2.value}</span></h3>
+          <h3>tel: <span>${tel2.value}</span></h3>
+          <h3>adress: <span>${adress11.value}, ${adress12.value}</span></h3>
+          <h3>oras: <span>${oras1.value}</span></h3>
+          <h3>zip: <span>${zip1.value}</span></h3>
+          <br/>
+`
+              : ""
+          }
+          <h3>Plata:
+          <h3>paypal: <span>${paypal.checked}</span></h3>
+          <h3>direct: <span>${direct.checked}</span></h3>
+          <h3>transfer: <span>${transfer.checked}</span></h3>
+    </div>
+    `;
+
+    const templateParams = {
+      template: a,
+      last_name: last_name.value,
+      first_name: first_name.value,
+    };
 
     await emailjs
-      .sendForm(
+      .send(
         "service_ea5w2pg",
         "template_z989gy9",
-        form.current,
+        // form.current,
+        templateParams,
         "user_3dO0i6OPdpXqoxoHSNrwB"
       )
       .then(
@@ -64,7 +140,7 @@ function Checkout({ addit }) {
 
   return (
     <>
-      {!user && <Navigate to="/" />}
+      {!loading && !user && <Navigate to="/" />}
       <div className="container-fluid">
         <div className="row px-xl-5">
           <div className="col-12">
@@ -315,9 +391,9 @@ function Checkout({ addit }) {
               </h5>
               <div className="bg-light p-30">
                 <div className="form-group">
-                  <div className="custom-control custom-radio">
+                  <div className="custom-control custom-checkbox">
                     <input
-                      type="radio"
+                      type="checkbox"
                       className="custom-control-input"
                       name="paypal"
                       id="paypal"
@@ -328,9 +404,9 @@ function Checkout({ addit }) {
                   </div>
                 </div>
                 <div className="form-group">
-                  <div className="custom-control custom-radio">
+                  <div className="custom-control custom-checkbox">
                     <input
-                      type="radio"
+                      type="checkbox"
                       className="custom-control-input"
                       name="direct"
                       id="directcheck"
@@ -344,9 +420,9 @@ function Checkout({ addit }) {
                   </div>
                 </div>
                 <div className="form-group mb-4">
-                  <div className="custom-control custom-radio">
+                  <div className="custom-control custom-checkbox">
                     <input
-                      type="radio"
+                      type="checkbox"
                       className="custom-control-input"
                       name="transfer"
                       id="banktransfer"
