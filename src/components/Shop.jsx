@@ -518,7 +518,7 @@ function Shop({ addit }) {
                           className="dropdown-item"
                           style={{ cursor: "pointer" }}
                         >
-                          Cele mai multe reviwes
+                          Cele mai multe reviews
                         </Link>
                         <Link
                           to={`/shop/${categorie}/mn`}
