@@ -11,7 +11,6 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import firebase from "firebase/compat/app";
 import "firebase/firestore";
 import {
   GoogleAuthProvider,
@@ -255,11 +254,16 @@ export default class Firestore {
             break;
 
           case "==":
-            arr = arr.filter((a) => a[filter[0]] == filter[2]);
+            console.log(filter);
+            // if (filter[0] == "reviews") {
+            //   arr = arr.filter((a) => a[filter[0]] == filter[2]);
+            // } else
+            arr = arr.filter((a) => a[filter[j][0]] == filter[j][2]);
             break;
         }
       }
     }
+    console.log(arr);
     if (filters.length == 0) return false;
     return arr;
   }
@@ -273,7 +277,7 @@ export default class Firestore {
     } else if (
       condition !== undefined &&
       limitare == undefined &&
-      ( typeof condition[2] !== "number") &&
+      typeof condition[2] !== "number" &&
       condition[2].includes("search")
     ) {
       q = query(collection(this.db, collectionName));
@@ -385,9 +389,18 @@ export default class Firestore {
   async deleteDocument(collectionName, documentId) {
     await deleteDoc(doc(this.db, collectionName, documentId));
   }
+
   async delete_all_from_cart(id) {
     const carts = await this.readDocuments("cos", ["id_produs", "==", id]);
     for (const cart of carts) {
+      await this.deleteDocument("cos", cart.id);
+    }
+  }
+
+  async delete_all_from_cart_by_user_id(id) {
+    const carts = await this.readDocuments("cos", ["user_id", "==", id]);
+    for (const cart of carts) {
+      console.log(cart);
       await this.deleteDocument("cos", cart.id);
     }
   }

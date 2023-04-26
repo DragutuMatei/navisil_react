@@ -3,12 +3,9 @@ import "./App.css";
 import Home from "./components/Home";
 import {
   BrowserRouter as Router,
-  Switch,
   Route,
   Routes,
-  Link,
-  useRouteMatch,
-  useParams,
+  useNavigate,
 } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import ProductPage from "./components/ProductPage";
@@ -58,8 +55,16 @@ function App() {
     await firestore
       .updateDocument("cos", uid, { cantitate: cant })
       .then((res) => {
-        setCosEv((old) => old - cant);
         alert("cantitatea s-a updatat!");
+      });
+  };
+
+  const finish = async () => {
+    return await firestore
+      .delete_all_from_cart_by_user_id(user.uid)
+      .then((res) => {
+        setCosEv((old) => old - 13);
+        console.log(res);
       });
   };
 
@@ -74,7 +79,7 @@ function App() {
         />
         <Route path="/prod/:id" element={<ProductPage addit={addit} />} />
         <Route path="/contact" Component={Contact} />
-        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/checkout" element={<Checkout finish={finish} />} />
         <Route
           path="/cart"
           element={<Cart delete_prod_app={delete_prod_app} update={update} />}

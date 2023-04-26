@@ -19,7 +19,8 @@ export default class Placeholder {
     return formattedToday;
   }
 
-  static roundit(num) {
-    return Math.round(num * 100) / 100;
+  static roundit(num, how) {
+    if (!how) return Math.round(num * 100) / 100;
+    else return Math.round(num * how) / how;
   }
 }

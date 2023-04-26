@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Firestore from "../js/Firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Placeholder from "../util/Placeholder";
+import Text from "../util/Text";
 
 const firestore = new Firestore();
 function Product({ img, link, name, price, oldPrice, id, addit, rating }) {
@@ -36,8 +37,41 @@ async function getProduct(productId) {
   return (
     <div
       className="col-lg-3 col-md-4 col-sm-6 pb-1"
-      style={{ overflow: "hidden" }}
+      style={{ position: "relative" }}
     >
+      {oldPrice > 0 && (
+        <div
+          style={{
+            position: "absolute",
+            top: -5,
+            left: 5,
+            width: "auto",
+            background: "red",
+            zIndex: 9,
+            padding: "4px 20px",
+            borderRadius: "0 20px 20px 0 ",
+            color: "white",
+            fontSize: 18,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <span>
+           - {Placeholder.makenumber(
+              Placeholder.roundit(((oldPrice - price) / oldPrice) * 100, 1)
+            )}
+          </span>
+          <span
+            style={{
+              fontSize: 20,
+              marginLeft:3
+            }}
+          >
+            %
+          </span>
+        </div>
+      )}
       <div className="product-item bg-light mb-4">
         <div
           className="product-img position-relative overflow-hidden"
@@ -74,11 +108,12 @@ async function getProduct(productId) {
           <a className="h6 text-decoration-none text-truncate" href={link}>
             {name}
           </a>
+
           <div className="d-flex align-items-center justify-content-center mt-2">
-            <h5>${price}</h5>
+            <h5>${Placeholder.makenumber(price)}</h5>
             {oldPrice > 0 && (
               <h6 className="text-muted ml-2">
-                <del>${oldPrice}</del>
+                <del>${Placeholder.makenumber(oldPrice)}</del>
               </h6>
             )}
           </div>

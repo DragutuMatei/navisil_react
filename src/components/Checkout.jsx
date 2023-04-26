@@ -4,12 +4,12 @@ import Firestore from "../js/Firestore";
 import { getAuth } from "@firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Text from "../util/Text";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 
 const firestore = new Firestore();
 const auth = getAuth();
 
-function Checkout({ addit }) {
+function Checkout({ finish }) {
   let ship = 10;
   const form = useRef();
   const [user, loading, error] = useAuthState(auth);
@@ -17,12 +17,13 @@ function Checkout({ addit }) {
   const [total, setTotal] = useState(0);
   const [value, setValue] = useState(1);
   const [hidden, setHidden] = useState([]);
+
+  const navigate = useNavigate();
+  
   const modi = (by) => {
     if ((value >= 1 && by > 0) || value >= 2) setValue((old) => old + by);
   };
-  const addit_prod = async (id, cant) => {
-    addit(id, cant);
-  };
+
   const signInWithGoogle = async () => {
     await firestore.signInWithGoogle();
   };
@@ -36,7 +37,7 @@ function Checkout({ addit }) {
       // console.log({ cant: res.cant, pret: res.pret, name: res.nume });
       setHidden((old) => [
         ...old,
-        { cant: res.cant, pret: res.pret, name: res.nume },
+        { id: res.id, cant: res.cant, pret: res.pret, name: res.nume },
       ]);
     });
     setTotal(resp.total);
@@ -81,31 +82,32 @@ function Checkout({ addit }) {
     } = form.current.elements;
 
     a += `</ul>
+          <h2>Pret final: ${(total + ship).toLocaleString("en-US")}</h2>
           <h3>email: <span>${email.value}</span> </h3>
-          <h3>tel: <span>${tel.value}</span></h3>
-          <h3>adress: <span>${adress1.value}, ${adress2.value}</span></h3>
-          <h3>oras: <span>${oras.value}</span></h3>
-          <h3>zip: <span>${zip.value}</span></h3>
+          <h4>tel: <span>${tel.value}</span></h4>
+          <h4>adress: <span>${adress1.value}, ${adress2.value}</span></h4>
+          <h4>oras: <span>${oras.value}</span></h4>
+          <h4>zip: <span>${zip.value}</span></h4>
           <br/>
           ${
             diff.checked
               ? `
-          <h3>Ship to a diff adress? <span>${diff.checked}</span></h3>
-          <h3>shipping to:
-          <h3>nume: <span>${nume1.value} ${nume2.value}</span></h3>
-          <h3>email: <span>${email2.value}</span></h3>
-          <h3>tel: <span>${tel2.value}</span></h3>
-          <h3>adress: <span>${adress11.value}, ${adress12.value}</span></h3>
-          <h3>oras: <span>${oras1.value}</span></h3>
-          <h3>zip: <span>${zip1.value}</span></h3>
+          <h4>Ship to a diff adress? <span>${diff.checked}</span></h4>
+          <h4>shipping to:
+          <h4>nume: <span>${nume1.value} ${nume2.value}</span></h4>
+          <h4>email: <span>${email2.value}</span></h4>
+          <h4>tel: <span>${tel2.value}</span></h4>
+          <h4>adress: <span>${adress11.value}, ${adress12.value}</span></h4>
+          <h4>oras: <span>${oras1.value}</span></h4>
+          <h4>zip: <span>${zip1.value}</span></h4>
           <br/>
 `
               : ""
           }
-          <h3>Plata:
-          <h3>paypal: <span>${paypal.checked}</span></h3>
-          <h3>direct: <span>${direct.checked}</span></h3>
-          <h3>transfer: <span>${transfer.checked}</span></h3>
+          <h4>Plata:
+          <h4>paypal: <span>${paypal.checked}</span></h4>
+          <h4>direct: <span>${direct.checked}</span></h4>
+          <h4>transfer: <span>${transfer.checked}</span></h4>
     </div>
     `;
 
@@ -124,10 +126,14 @@ function Checkout({ addit }) {
         "user_3dO0i6OPdpXqoxoHSNrwB"
       )
       .then(
-        (result) => {
+        async (result) => {
           console.log(result);
-          if (result.status == 200) alert("comanda plasata");
-          else {
+          if (result.status == 200) {
+            alert("comanda plasata");
+            await finish().then((res) => {
+              navigate("/shop/all");
+            });
+          } else {
             alert("a intervenit o problema la plasarea comenzii");
           }
         },

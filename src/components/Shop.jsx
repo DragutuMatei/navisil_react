@@ -5,20 +5,10 @@ import Text from "../util/Text";
 import Product from "./Product";
 
 let arr = [];
-// [
-//   [
-//     ["pret", ">=", 100],
-//     ["pret", "<=", 200],
-//   ],
-//   [
-//     ["pret", ">=", 200],
-//     ["pret", "<=", 300],
-//   ],
-// ];
 const firestore = new Firestore();
 let filters = [];
 let local_filters = [];
-const filter_arr = {
+let filter_arr = {
   "0-100": [
     ["pret", ">=", 0],
     ["pret", "<=", 100],
@@ -40,6 +30,16 @@ const filter_arr = {
     ["pret", "<=", 500],
   ],
   "over-500": [["pret", ">=", 500]],
+  "is-Discount": [["old_pret", ">", 0]],
+  "5-rating": [["rating", "==", 5]],
+  "4-rating": [["rating", "==", 4]],
+  "3-rating": [["rating", "==", 3]],
+  "2-rating": [["rating", "==", 2]],
+  "1-rating": [["rating", "==", 1]],
+  samsung: [["brand", "==", "samsung"]],
+  apple: [["brand", "==", "apple"]],
+  xiaomi: [["brand", "==", "xiaomi"]],
+  motorola: [["brand", "==", "motorola"]],
 };
 
 function Shop({ addit }) {
@@ -52,6 +52,7 @@ function Shop({ addit }) {
 
   useEffect(() => {
     setf(Object.entries(filter_arr));
+
     if (
       localStorage.getItem("local_filters") &&
       localStorage.getItem("local_filters") !== "[]"
@@ -68,6 +69,18 @@ function Shop({ addit }) {
     window.scrollTo(0, 0);
   }, []);
 
+  // useEffect(() => {
+  //   products.map((p) => {
+  //     if (p.brand !== undefined) {
+  //       filter_arr = {
+  //         ...filter_arr,
+  //         ...{ [p.brand]: [["brand", "==", p.brand]] },
+  //       };
+  //     }
+  //   });
+  //   console.log(filter_arr);
+  // }, [products]);
+
   useEffect(() => {
     if (categorie == "reducere") catt = ["old_pret", ">", 0];
     else catt = ["categories", "==", categorie];
@@ -75,8 +88,9 @@ function Shop({ addit }) {
   }, [catt, categorie]);
 
   useEffect(() => {
-    if (categorie == "reducere") catt = ["old_pret", ">", 0];
-    else catt = ["categories", "==", categorie];
+    if (categorie == "reducere") {
+      catt = ["old_pret", ">", 0];
+    } else catt = ["categories", "==", categorie];
     if (categorie.includes("search")) {
       //search ========== includes
       firestore
@@ -112,8 +126,6 @@ function Shop({ addit }) {
         }
         arr = res;
         setProducts((old) => (old = res));
-
-        // console.log(arr);
       });
     }
   }, [categorie, sort_param]);
@@ -129,17 +141,22 @@ function Shop({ addit }) {
         arr.sort((a, b) => b.pret - a.pret);
         // setProducts((prod) => [...prod.sort((a, b) => b.pret - a.pret)]);
         break;
-      case "nc":
-        arr.sort((a, b) => a.nume.localeCompare(b.nume));
-        // setProducts((prod) => [...prod.sort((a, b) => a.nume - b.nume)]);
+      case "dd":
+        arr.sort(
+          (a, b) =>
+            calculatedisc(b.old_pret, b.pret) -
+            calculatedisc(a.old_pret, a.pret)
+        );
         break;
-      case "nd":
-        arr.sort((a, b) => b.nume.localeCompare(a.nume));
-        // setProducts((prod) => [...prod.sort((a, b) => b.nume - a.nume)]);
-        break;
-
       case "rc":
         arr.sort((a, b) => b.rating - a.rating);
+        break;
+
+      case "rd":
+        arr.sort((a, b) => b.reviews.length - a.reviews.length);
+        break;
+      case "mn":
+        arr.sort((a, b) => Date.parse(b.date) - Date.parse(a.date));
         break;
     }
     if (nope !== "ok") setProducts((old) => [...arr]);
@@ -147,16 +164,6 @@ function Shop({ addit }) {
     // console.log("products", products);
     // console.log("arr", arr);
   };
-
-  // const [filters, setFilters] = useState([
-  // ["old_pret", "==", 0],
-  /**
-   *  [ "brand", "==", "dero" ]
-   */
-  // ]);
-  // useEffect(() => {
-  //   console.log(filters);
-  // }, filters);
 
   const updateFilters = async (arr, filters) => {
     await firestore.filter(arr, filters).then((res) => {
@@ -292,6 +299,10 @@ function Shop({ addit }) {
     });
   };
 
+  const calculatedisc = (oldPrice, price) => {
+    return ((oldPrice - price) / oldPrice) * 100;
+  };
+
   return (
     <>
       <div className="container-fluid">
@@ -320,189 +331,121 @@ function Shop({ addit }) {
               <div>
                 {filter_map.map((filter, index) => {
                   let ar = filter[0].split("-");
-                  // console.log(local_filters, index, filter[0]);
-                  // if (index == 5) {
-                  //   for (let i = 0; i < local_filters.length; i++) {
-                  //     let id = local_filters[i];
-                  //     console.log(Object.keys(id)[0]);
-                  //   }
-                  // }
 
                   return (
-                    <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                      <input
-                        checked={
-                          local_filters.find((id) => id == filter[0])
-                            ? true
-                            : false
-                        }
-                        type="checkbox"
-                        className="custom-control-input"
-                        onChange={(e) => addFilter(e, filter[0])}
-                        // data-filter={filter[0]}
-                        id={`price-${index}`}
-                      />
-                      <label
-                        className="custom-control-label"
-                        htmlFor={`price-${index}`}
-                      >
-                        {index <= 5 &&
-                          (ar[0] === "over" ? "> " : "$" + ar[0] + " - ") +
-                            "$" +
-                            ar[1]}
-                      </label>
-                    </div>
+                    index <= 6 && (
+                      <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                        <input
+                          checked={
+                            local_filters.find((id) => id == filter[0])
+                              ? true
+                              : false
+                          }
+                          type="checkbox"
+                          className="custom-control-input"
+                          onChange={(e) => addFilter(e, filter[0])}
+                          // data-filter={filter[0]}
+                          id={`price-${index}`}
+                        />
+                        <label
+                          className="custom-control-label"
+                          htmlFor={`price-${index}`}
+                        >
+                          {index <= 5
+                            ? (ar[0] === "over" ? "> " : "$" + ar[0] + " - ") +
+                              "$" +
+                              ar[1]
+                            : index == 6 && <>Discount</>}
+                        </label>
+                      </div>
+                    )
+                  );
+                })}
+              </div>
+            </div>
+            <h5 className="section-title position-relative text-uppercase mb-3">
+              <span className="bg-secondary pr-3">Filter by rating</span>
+            </h5>
+            <div className="bg-light p-4 mb-30">
+              <div>
+                {filter_map.map((filter, index) => {
+                  let ar = filter[0].split("-");
+
+                  return (
+                    index > 6 &&
+                    index <= 11 && (
+                      <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                        <input
+                          checked={
+                            local_filters.find((id) => id == filter[0])
+                              ? true
+                              : false
+                          }
+                          type="checkbox"
+                          className="custom-control-input"
+                          onChange={(e) => addFilter(e, filter[0])}
+                          // data-filter={filter[0]}
+                          id={`disc-${index}`}
+                        />
+                        <label
+                          className="custom-control-label"
+                          htmlFor={`disc-${index}`}
+                        >
+                          {[...Array(parseInt(ar[0], 10))].map((a, index) => {
+                            return (
+                              <i
+                                className="fas fa-star text-primary mr-1"
+                                key={index}
+                              ></i>
+                            );
+                          })}
+                        </label>
+                      </div>
+                    )
+                  );
+                })}
+              </div>
+            </div>
+            <h5 className="section-title position-relative text-uppercase mb-3">
+              <span className="bg-secondary pr-3">Filter by brand</span>
+            </h5>
+            <div className="bg-light p-4 mb-30">
+              <div>
+                {filter_map.map((filter, index) => {
+                  let ar = filter[0].split("-");
+
+                  return (
+                    index > 11 && (
+                      <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                        <input
+                          checked={
+                            local_filters.find((id) => id == filter[0])
+                              ? true
+                              : false
+                          }
+                          type="checkbox"
+                          className="custom-control-input"
+                          onChange={(e) => addFilter(e, filter[0])}
+                          id={`brand-${index}`}
+                        />
+                        <label
+                          className="custom-control-label"
+                          htmlFor={`brand-${index}`}
+                        >
+                          {ar[0]}
+                        </label>
+                      </div>
+                    )
                   );
                 })}
               </div>
             </div>
 
             <h5 className="section-title position-relative text-uppercase mb-3">
-              <span className="bg-secondary pr-3">Filter by color</span>
-            </h5>
-            <div className="bg-light p-4 mb-30">
-              <form>
-                <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                  <input
-                    type="checkbox"
-                    //                    )}
-                    className="custom-control-input"
-                    id="color-all"
-                  />
-                  <label className="custom-control-label" htmlFor="price-all">
-                    All Color
-                  </label>
-                </div>
-                <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                  <input
-                    type="checkbox"
-                    //                    )}
-                    className="custom-control-input"
-                    id="color-1"
-                  />
-                  <label className="custom-control-label" htmlFor="color-1">
-                    Black
-                  </label>
-                </div>
-                <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                  <input
-                    type="checkbox"
-                    //                    )}
-                    className="custom-control-input"
-                    id="color-2"
-                  />
-                  <label className="custom-control-label" htmlFor="color-2">
-                    White
-                  </label>
-                </div>
-                <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                  <input
-                    type="checkbox"
-                    //                    )}
-                    className="custom-control-input"
-                    id="color-3"
-                  />
-                  <label className="custom-control-label" htmlFor="color-3">
-                    Red
-                  </label>
-                </div>
-                <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                  <input
-                    type="checkbox"
-                    //                    )}
-                    className="custom-control-input"
-                    id="color-4"
-                  />
-                  <label className="custom-control-label" htmlFor="color-4">
-                    Blue
-                  </label>
-                </div>
-                <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                  <input
-                    type="checkbox"
-                    //                    )}
-                    className="custom-control-input"
-                    id="color-5"
-                  />
-                  <label className="custom-control-label" htmlFor="color-5">
-                    Green
-                  </label>
-                </div>
-              </form>
-            </div>
-
-            <h5 className="section-title position-relative text-uppercase mb-3">
               <span className="bg-secondary pr-3">Filter by size</span>
             </h5>
             <div className="bg-light p-4 mb-30">
-              <form>
-                <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                  <input
-                    type="checkbox"
-                    //                    )}
-                    className="custom-control-input"
-                    id="size-all"
-                  />
-                  <label className="custom-control-label" htmlFor="size-all">
-                    All Size
-                  </label>
-                </div>
-                <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                  <input
-                    type="checkbox"
-                    //                    )}
-                    className="custom-control-input"
-                    id="size-1"
-                  />
-                  <label className="custom-control-label" htmlFor="size-1">
-                    XS
-                  </label>
-                </div>
-                <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                  <input
-                    type="checkbox"
-                    //                    )}
-                    className="custom-control-input"
-                    id="size-2"
-                  />
-                  <label className="custom-control-label" htmlFor="size-2">
-                    S
-                  </label>
-                </div>
-                <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                  <input
-                    type="checkbox"
-                    //                    )}
-                    className="custom-control-input"
-                    id="size-3"
-                  />
-                  <label className="custom-control-label" htmlFor="size-3">
-                    M
-                  </label>
-                </div>
-                <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                  <input
-                    type="checkbox"
-                    //                    )}
-                    className="custom-control-input"
-                    id="size-4"
-                  />
-                  <label className="custom-control-label" htmlFor="size-4">
-                    L
-                  </label>
-                </div>
-                <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                  <input
-                    type="checkbox"
-                    //                    )}
-                    className="custom-control-input"
-                    id="size-5"
-                  />
-                  <label className="custom-control-label" htmlFor="size-5">
-                    XL
-                  </label>
-                </div>
-              </form>
+              <div></div>
             </div>
           </div>
 
@@ -532,6 +475,13 @@ function Shop({ addit }) {
                       </button>
                       <div className="dropdown-menu dropdown-menu-right">
                         <Link
+                          to={`/shop/${categorie}`}
+                          className="dropdown-item"
+                          style={{ cursor: "pointer" }}
+                        >
+                          Fara sortare
+                        </Link>
+                        <Link
                           to={`/shop/${categorie}/pc`}
                           className="dropdown-item"
                           style={{ cursor: "pointer" }}
@@ -547,22 +497,6 @@ function Shop({ addit }) {
                         >
                           Pret - descrescator
                         </Link>
-                        <Link
-                          to={`/shop/${categorie}/nc`}
-                          className="dropdown-item"
-                          style={{ cursor: "pointer" }}
-                          // onClick={() => sort("nc")}
-                        >
-                          Nume - crescator
-                        </Link>
-                        <Link
-                          to={`/shop/${categorie}/nd`}
-                          className="dropdown-item"
-                          style={{ cursor: "pointer" }}
-                          // onClick={() => sort("nd")}
-                        >
-                          Nume - descrescator
-                        </Link>
 
                         <Link
                           to={`/shop/${categorie}/rc`}
@@ -570,6 +504,28 @@ function Shop({ addit }) {
                           style={{ cursor: "pointer" }}
                         >
                           Cele mai populare
+                        </Link>
+
+                        <Link
+                          to={`/shop/${categorie}/dd`}
+                          className="dropdown-item"
+                          style={{ cursor: "pointer" }}
+                        >
+                          Discount %
+                        </Link>
+                        <Link
+                          to={`/shop/${categorie}/rd`}
+                          className="dropdown-item"
+                          style={{ cursor: "pointer" }}
+                        >
+                          Cele mai multe reviwes
+                        </Link>
+                        <Link
+                          to={`/shop/${categorie}/mn`}
+                          className="dropdown-item"
+                          style={{ cursor: "pointer" }}
+                        >
+                          Cele mai noi
                         </Link>
                       </div>
                     </div>

@@ -76,11 +76,19 @@ function Navbar({ cos }) {
                   onChange={(e) => setSearch(e.target.value.trim())}
                   className="form-control"
                   placeholder="Search for products"
+                  onKeyDown={(e) => {
+                    if (e.key == "Enter") searchfct();
+                  }}
                 />
                 <div className="input-group-append">
                   <span
+                    role="button"
+                    onKeyDown={(e) => {
+                      if (e.key == "Enter") searchfct();
+                    }}
                     className="input-group-text bg-transparent text-primary"
                     onClick={searchfct}
+                    tabIndex="0"
                     style={{
                       cursor: "pointer",
                     }}
@@ -217,10 +225,10 @@ function Navbar({ cos }) {
               style={{ width: "100%", zIndex: "999" }}
             >
               <div className="navbar-nav w-100 categories">
-                <Link
-                  to={`/shop/reducere`}
-                  className="nav-item nav-link"
-                >
+              <Link to={`/shop/all`} className="nav-item nav-link">
+                  Toate produsele
+                </Link>
+                <Link to={`/shop/reducere`} className="nav-item nav-link">
                   Reducere
                 </Link>
                 {categories &&

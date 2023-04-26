@@ -80,16 +80,16 @@ function Home({ addit }) {
                   />
                   <div className="carousel-caption d-flex flex-column align-items-center justify-content-center">
                     <div className="p-3" style={{ maxWidth: "700px" }}>
-                      <h1 className="display-4 text-white mb-3 animate__animated animate__fadeInDown">
-                        Men Fashion
+                      <h1 className="display-4 text-white mb-3 animate__animated animate__fadeInDown" style={{textShadow:"1px 6px 12px #2f2f2f"}}>
+                        La noi pretul e corect
                       </h1>
-                      <p className="mx-md-5 px-5 animate__animated animate__bounceIn">
+                      {/* <p className="mx-md-5 px-5 animate__animated animate__bounceIn">
                         Lorem rebum magna amet lorem magna erat diam stet.
                         Sadips duo stet amet amet ndiam elitr ipsum diam
-                      </p>
+                      </p> */}
                       <a
                         className="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp"
-                        href="#"
+                        href="/shop/all"
                       >
                         Shop Now
                       </a>
@@ -107,16 +107,16 @@ function Home({ addit }) {
                   />
                   <div className="carousel-caption d-flex flex-column align-items-center justify-content-center">
                     <div className="p-3" style={{ maxWidth: "700px" }}>
-                      <h1 className="display-4 text-white mb-3 animate__animated animate__fadeInDown">
-                        Women Fashion
+                      <h1 className="display-4 text-white mb-3 animate__animated animate__fadeInDown" style={{textShadow:"1px 6px 12px #2f2f2f"}}>
+                        La noi pretul e corect
                       </h1>
-                      <p className="mx-md-5 px-5 animate__animated animate__bounceIn">
+                      {/* <p className="mx-md-5 px-5 animate__animated animate__bounceIn">
                         Lorem rebum magna amet lorem magna erat diam stet.
                         Sadips duo stet amet amet ndiam elitr ipsum diam
-                      </p>
+                      </p> */}
                       <a
                         className="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp"
-                        href="#"
+                        href="/shop/all"
                       >
                         Shop Now
                       </a>
@@ -134,16 +134,16 @@ function Home({ addit }) {
                   />
                   <div className="carousel-caption d-flex flex-column align-items-center justify-content-center">
                     <div className="p-3" style={{ maxWidth: "700px" }}>
-                      <h1 className="display-4 text-white mb-3 animate__animated animate__fadeInDown">
-                        Kids Fashion
+                      <h1 className="display-4 text-white mb-3 animate__animated animate__fadeInDown" style={{textShadow:"1px 6px 12px #2f2f2f"}}>
+                        La noi pretul e corect
                       </h1>
-                      <p className="mx-md-5 px-5 animate__animated animate__bounceIn">
+                      {/* <p className="mx-md-5 px-5 animate__animated animate__bounceIn">
                         Lorem rebum magna amet lorem magna erat diam stet.
                         Sadips duo stet amet amet ndiam elitr ipsum diam
-                      </p>
+                      </p> */}
                       <a
                         className="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp"
-                        href="#"
+                        href="/shop/all"
                       >
                         Shop Now
                       </a>
