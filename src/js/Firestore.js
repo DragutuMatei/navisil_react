@@ -290,7 +290,8 @@ export default class Firestore {
       q = query(
         collection(this.db, collectionName),
         where(condition[0], condition[1], condition[2]),
-        limit(limitare)
+        limit(limitare),
+        orderBy("rating", "desc")
       );
     }
     const querySnapshot = await getDocs(q);
@@ -318,7 +319,6 @@ export default class Firestore {
   async getProductById(productId) {
     const docRef = doc(this.db, "products", productId);
     const docSnap = await getDoc(docRef);
-    // // console.log(docSnap.data().images);
 
     if (docSnap.exists()) {
       return { id: docSnap.id, ...docSnap.data() };

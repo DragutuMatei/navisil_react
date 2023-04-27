@@ -23,7 +23,7 @@ function Home({ addit }) {
     await firestore
       .readDocuments("products", ["rating", ">=", 4], 8)
       .then((res) => {
-        console.log(res);
+        console.log(res[i].rating);
         setFeatures(res);
       });
   };
@@ -80,7 +80,10 @@ function Home({ addit }) {
                   />
                   <div className="carousel-caption d-flex flex-column align-items-center justify-content-center">
                     <div className="p-3" style={{ maxWidth: "700px" }}>
-                      <h1 className="display-4 text-white mb-3 animate__animated animate__fadeInDown" style={{textShadow:"1px 6px 12px #2f2f2f"}}>
+                      <h1
+                        className="display-4 text-white mb-3 animate__animated animate__fadeInDown"
+                        style={{ textShadow: "1px 6px 12px #2f2f2f" }}
+                      >
                         La noi pretul e corect
                       </h1>
                       {/* <p className="mx-md-5 px-5 animate__animated animate__bounceIn">
@@ -107,7 +110,10 @@ function Home({ addit }) {
                   />
                   <div className="carousel-caption d-flex flex-column align-items-center justify-content-center">
                     <div className="p-3" style={{ maxWidth: "700px" }}>
-                      <h1 className="display-4 text-white mb-3 animate__animated animate__fadeInDown" style={{textShadow:"1px 6px 12px #2f2f2f"}}>
+                      <h1
+                        className="display-4 text-white mb-3 animate__animated animate__fadeInDown"
+                        style={{ textShadow: "1px 6px 12px #2f2f2f" }}
+                      >
                         La noi pretul e corect
                       </h1>
                       {/* <p className="mx-md-5 px-5 animate__animated animate__bounceIn">
@@ -134,7 +140,10 @@ function Home({ addit }) {
                   />
                   <div className="carousel-caption d-flex flex-column align-items-center justify-content-center">
                     <div className="p-3" style={{ maxWidth: "700px" }}>
-                      <h1 className="display-4 text-white mb-3 animate__animated animate__fadeInDown" style={{textShadow:"1px 6px 12px #2f2f2f"}}>
+                      <h1
+                        className="display-4 text-white mb-3 animate__animated animate__fadeInDown"
+                        style={{ textShadow: "1px 6px 12px #2f2f2f" }}
+                      >
                         La noi pretul e corect
                       </h1>
                       {/* <p className="mx-md-5 px-5 animate__animated animate__bounceIn">

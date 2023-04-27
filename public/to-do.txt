@@ -11,8 +11,8 @@ sort dupa reducere---------------------
 brand --------------------------------
 + precizare curier 
 politica de confidentialitate 
-politica de retur
-date de firme
+politica de retur 
+date de firme 
 adaugare ramburs
 > ceva pret transport gratuit
 
@@ -28,3 +28,6 @@ homa page -> oferte sapt
 
 
 shopping din admin
+
+
+!!!!!!!CUPOANE -STRATEGIE DE MARKETING

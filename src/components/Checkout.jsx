@@ -10,16 +10,16 @@ const firestore = new Firestore();
 const auth = getAuth();
 
 function Checkout({ finish }) {
-  let ship = 10;
   const form = useRef();
   const [user, loading, error] = useAuthState(auth);
   const [products, setP] = useState([]);
   const [total, setTotal] = useState(0);
   const [value, setValue] = useState(1);
   const [hidden, setHidden] = useState([]);
+  const [ship, setShip] = useState(50);
 
   const navigate = useNavigate();
-  
+
   const modi = (by) => {
     if ((value >= 1 && by > 0) || value >= 2) setValue((old) => old + by);
   };
@@ -41,6 +41,9 @@ function Checkout({ finish }) {
       ]);
     });
     setTotal(resp.total);
+    
+    if (resp.total > 1000) setShip(0);
+    else setShip(50);
   };
   useEffect(() => {
     ok();
@@ -115,6 +118,7 @@ function Checkout({ finish }) {
       template: a,
       last_name: last_name.value,
       first_name: first_name.value,
+      email: email.value
     };
 
     await emailjs
@@ -397,6 +401,25 @@ function Checkout({ finish }) {
               </h5>
               <div className="bg-light p-30">
                 <div className="form-group">
+                  <div className="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      className="custom-control-input"
+                      name="ramburs"
+                      id="ramburs"
+                    />
+                    <label
+                      data-toggle="collapse"
+                      data-target="#ramburss"
+                      className="custom-control-label"
+                      htmlFor="ramburs"
+                    >
+                      Ramburs
+                    </label>
+                  </div>
+                  <div className="collapse mb-5" id="ramburss">
+                    ladnfdlnkdslfnl
+                  </div>
                   <div className="custom-control custom-checkbox">
                     <input
                       type="checkbox"

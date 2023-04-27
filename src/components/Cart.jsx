@@ -10,7 +10,6 @@ const firestore = new Firestore();
 const auth = getAuth();
 
 function Cart({ delete_prod_app, update }) {
-  let ship = 10;
   const [user, loading, error] = useAuthState(auth);
   const [products, setP] = useState([]);
   const [total, setTotal] = useState(0);
@@ -29,6 +28,8 @@ function Cart({ delete_prod_app, update }) {
   const handleUpdateObject = (id, by) => {
     const objectToUpdate = products.find((obj) => obj.uid === id);
 
+    if (objectToUpdate.cant + by <= 0) return;
+
     if (objectToUpdate) {
       objectToUpdate.cant = objectToUpdate.cant + by;
 
@@ -42,6 +43,9 @@ function Cart({ delete_prod_app, update }) {
       totall += p.cant * p.pret;
     });
     setTotal(totall);
+
+    if (totall > 1000) setShip(0);
+    else setShip(50);
   }, [products]);
 
   const signInWithGoogle = async () => {
@@ -60,6 +64,7 @@ function Cart({ delete_prod_app, update }) {
     delete_prod_app(id, cant);
     ok();
   };
+  const [ship, setShip] = useState(50);
 
   return (
     <>
@@ -93,7 +98,7 @@ function Cart({ delete_prod_app, update }) {
                 {!user ? (
                   <tr>
                     <td>
-                    <h3>Logheaza te ca sa adaugi in cos produse</h3>
+                      <h3>Logheaza te ca sa adaugi in cos produse</h3>
                     </td>
                   </tr>
                 ) : (
@@ -140,6 +145,7 @@ function Cart({ delete_prod_app, update }) {
                               type="number"
                               className="form-control form-control-sm bg-secondary border-0 text-center"
                               value={prod.cant}
+                              min={1}
                             />
                             <div className="input-group-btn">
                               <button
@@ -209,12 +215,14 @@ function Cart({ delete_prod_app, update }) {
                     ${total ? Placeholder.makenumber(total + ship) : "..."}
                   </h5>
                 </div>
-                {user && (
+                {user && total ? (
                   <Link to="/checkout">
                     <button className="btn btn-block btn-primary font-weight-bold my-3 py-3">
                       Proceed To Checkout
                     </button>
                   </Link>
+                ) : (
+                  <></>
                 )}
               </div>
             </div>

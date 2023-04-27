@@ -2,14 +2,20 @@ import React, { useEffect, useState } from "react";
 import Firestore from "../js/Firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import Placeholder from "../util/Placeholder";
+import { getAuth } from "@firebase/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 const firestore = new Firestore();
 const storage = getStorage();
+const auth = getAuth();
+
+const ids = ["lwiXVbRBYhhFGnz2OQsb7nitcI03", "jrn0zqDZ4rZqjM3rJve2mOEtCc33"];
 
 function AdminPage() {
   //get categories
   const [mesajeContact, setMesajeContact] = useState([]);
-
+  const [user, loading, error] = useAuthState(auth);
+  const [loading_prod, setLoadingPrd] = useState(false);
   const getMesajeContact = async () => {
     firestore.readDocuments("contact").then((res) => {
       setMesajeContact(res);
@@ -70,6 +76,7 @@ function AdminPage() {
   };
 
   const handleSubmit = async () => {
+    setLoadingPrd(true);
     const storage = getStorage();
     const downloadUrls = [];
 
@@ -96,13 +103,14 @@ function AdminPage() {
     // console.log(downloadUrls, idk);
     // // console.log(newItem);
 
-    await firestore.addItem("products", idk);
-    getProducts();
-    alert("Produs adaugat");
-  };
-
-  const see = () => {
-    // console.log(newItem);
+    await firestore.addItem("products", idk).then((res) => {
+      setLoadingPrd(false);
+      getProducts();
+      alert("Produs adaugat");
+    }).catch(er => {
+      console.log(er);
+      setLoadingPrd(false);
+    });
   };
 
   const [updateItem, setUpdateItem] = useState({
@@ -239,27 +247,200 @@ function AdminPage() {
       });
   };
 
-  return (
-    <>
-      <div style={{ margin: "0 30px" }}>
-        <section className="addSection">
-          <div className="left">
-            <div className="numeProdus">
-              <div className="addTitle">Nume Produs</div>
-              <input
-                placeholder="Nume Produs"
-                onChange={(e) => modifield("nume", e.target.value)}
-                // cols="30"
-                // rows="10"
-              ></input>
+  const checkAdmin = () => {
+    if (user) {
+      if (ids.includes(user.uid)) {
+      } else {
+        alert("Nu ai acces aici");
+      }
+    } else {
+      alert("Logheaza te ca sa ai acces aici");
+    }
+  };
+
+  return loading ? (
+    <h1>Se incarca</h1>
+  ) : user ? (
+    ids.includes(user.uid) ? (
+      <>
+        <div style={{ margin: "0 30px" }}>
+          <section className="addSection">
+            <div className="left">
+              <div className="numeProdus">
+                <div className="addTitle">Nume Produs</div>
+                <input
+                  placeholder="Nume Produs"
+                  onChange={(e) => modifield("nume", e.target.value)}
+                  // cols="30"
+                  // rows="10"
+                ></input>
+              </div>
+              <div className="categorieProdus">
+                <div>
+                  <div className="addCategorie">Categorie</div>
+                  <select
+                    onChange={(e) => modifield("categories", e.target.value)}
+                  >
+                    <option>Alege o caterogie</option>
+                    {categories &&
+                      categories.map((cat) => (
+                        <option key={cat.categorie} value={cat.categorie}>
+                          {cat.categorie}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+                {/* <div className="categorii">
+            {
+              categories && categories.map((cat)=>{
+                return (<div className="categ" { ...newItem[categories] === cat.categorie ? 'id="cetegSelected' : null} key={Math.random()} onClick={(e)=>{modifield("categories", e.target.value)}}>{cat.categorie}</div>)
+              })
+            }
+          </div> */}
+                <div className="addPret">
+                  <div>
+                    <div>Pret</div>
+                    <input
+                      type="number"
+                      onChange={(e) =>
+                        modifield("pret", parseFloat(e.target.value))
+                      }
+                      placeholder="Pret de vanzare"
+                    />
+                  </div>
+                  <div>
+                    <div>Pret anterior</div>
+                    <input
+                      type="number"
+                      onChange={(e) =>
+                        modifield("old_pret", parseFloat(e.target.value))
+                      }
+                      placeholder="Pret anterior"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="descriereProdus">
+                {/* <ReactQuill
+            // value={content}
+            onChange={(e) => modifield("descriere_scurta", e)}
+            modules={modules}
+            formats={formats}
+          /> */}
+                <textarea
+                  name=""
+                  id=""
+                  onChange={(e) =>
+                    modifield("descriere_scurta", e.target.value)
+                  }
+                  cols="30"
+                  rows="10"
+                  placeholder="Descriere scurta"
+                ></textarea>
+                <textarea
+                  name=""
+                  id=""
+                  onChange={(e) => modifield("descriere_lunga", e.target.value)}
+                  cols="30"
+                  rows="10"
+                  placeholder="Descriere lunga"
+                ></textarea>
+              </div>
             </div>
-            <div className="categorieProdus">
-              <div>
-                <div className="addCategorie">Categorie</div>
-                <select
-                  onChange={(e) => modifield("categories", e.target.value)}
-                >
-                  <option>Alege o caterogie</option>
+            <div className="right">
+              <div className="imagineProdus">
+                <div className="imagineTitle">Imagini Produs</div>
+                <input type="file" multiple onChange={handleFileInputChange} />
+              </div>
+              <div className="informatieProdus">
+                <div className="informatieTitle">Informatii Produs</div>
+                <textarea
+                  onChange={(e) => modifield("info", e.target.value)}
+                  name=""
+                  id=""
+                  cols="30"
+                  rows="10"
+                  placeholder="Informatii produs"
+                ></textarea>
+              </div>
+              <div className="cantitateProdus">
+                <div>
+                  <div>Data Primire</div>
+                  <input
+                    type="date"
+                    onChange={(e) => modifield("date", e.target.value)}
+                    placeholder="date"
+                  />
+                </div>
+                <div>
+                  <div>Cantitate Produs</div>
+                  <input
+                    type="number"
+                    onChange={(e) =>
+                      modifield("cantitate", parseFloat(e.target.value))
+                    }
+                    placeholder="cantitate"
+                  />
+                </div>
+              </div>
+              <div className="actiuniProdus">
+                {loading_prod ? (
+                  <>
+                    <span className="loader"></span>
+                  </>
+                ) : (
+                  <button className="button-6" onClick={handleSubmit}>
+                    ADAUGA
+                  </button>
+                )}{" "}
+              </div>
+            </div>
+          </section>
+          <br />
+          <br />
+          <hr />
+          <section className="prods">
+            {updateState && (
+              <section id="update">
+                <h1>Update form:</h1>
+                <textarea
+                  placeholder="nume"
+                  onChange={(e) => updateF("nume", e.target.value)}
+                  cols="30"
+                  rows="10"
+                  value={updateItem.nume}
+                ></textarea>
+                <textarea
+                  name=""
+                  id=""
+                  onChange={(e) => updateF("descriere_scurta", e.target.value)}
+                  cols="30"
+                  value={updateItem.descriere_scurta}
+                  rows="10"
+                  placeholder="descriere_scurta"
+                ></textarea>
+                <textarea
+                  name=""
+                  id=""
+                  onChange={(e) => updateF("descriere_lunga", e.target.value)}
+                  value={updateItem.descriere_lunga}
+                  cols="30"
+                  rows="10"
+                  placeholder="descriere_lunga"
+                ></textarea>
+                <textarea
+                  onChange={(e) => updateF("info", e.target.value)}
+                  name=""
+                  value={updateItem.info}
+                  id=""
+                  cols="30"
+                  rows="10"
+                  placeholder="info"
+                ></textarea>
+                <select onChange={(e) => updateF("categories", e.target.value)}>
+                  <option value={updateItem.categories}>
+                    Alege o caterogie
+                  </option>
                   {categories &&
                     categories.map((cat) => (
                       <option key={cat.categorie} value={cat.categorie}>
@@ -267,422 +448,275 @@ function AdminPage() {
                       </option>
                     ))}
                 </select>
-              </div>
-              {/* <div className="categorii">
-                {
-                  categories && categories.map((cat)=>{
-                    return (<div className="categ" { ...newItem[categories] === cat.categorie ? 'id="cetegSelected' : null} key={Math.random()} onClick={(e)=>{modifield("categories", e.target.value)}}>{cat.categorie}</div>)
-                  })
-                }
-              </div> */}
-              <div className="addPret">
-                <div>
-                  <div>Pret</div>
-                  <input
-                    type="number"
-                    onChange={(e) =>
-                      modifield("pret", parseFloat(e.target.value))
-                    }
-                    placeholder="Pret de vanzare"
-                  />
-                </div>
-                <div>
-                  <div>Pret anterior</div>
-                  <input
-                    type="number"
-                    onChange={(e) =>
-                      modifield("old_pret", parseFloat(e.target.value))
-                    }
-                    placeholder="Pret anterior"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="descriereProdus">
-              {/* <ReactQuill
-                // value={content}
-                onChange={(e) => modifield("descriere_scurta", e)}
-                modules={modules}
-                formats={formats}
-              /> */}
-              <textarea
-                name=""
-                id=""
-                onChange={(e) => modifield("descriere_scurta", e.target.value)}
-                cols="30"
-                rows="10"
-                placeholder="Descriere scurta"
-              ></textarea>
-              <textarea
-                name=""
-                id=""
-                onChange={(e) => modifield("descriere_lunga", e.target.value)}
-                cols="30"
-                rows="10"
-                placeholder="Descriere lunga"
-              ></textarea>
-            </div>
-          </div>
-          <div className="right">
-            <div className="imagineProdus">
-              <div className="imagineTitle">Imagini Produs</div>
-              <input type="file" multiple onChange={handleFileInputChange} />
-            </div>
-            <div className="informatieProdus">
-              <div className="informatieTitle">Informatii Produs</div>
-              <textarea
-                onChange={(e) => modifield("info", e.target.value)}
-                name=""
-                id=""
-                cols="30"
-                rows="10"
-                placeholder="Informatii produs"
-              ></textarea>
-            </div>
-            <div className="cantitateProdus">
-              <div>
-                <div>Data Primire</div>
                 <input
-                  type="date"
-                  onChange={(e) => modifield("date", e.target.value)}
-                  placeholder="date"
+                  value={updateItem.pret}
+                  type="number"
+                  onChange={(e) => updateF("pret", parseFloat(e.target.value))}
+                  placeholder="pret"
                 />
-              </div>
-              <div>
-                <div>Cantitate Produs</div>
                 <input
+                  value={updateItem.old_pret}
                   type="number"
                   onChange={(e) =>
-                    modifield("cantitate", parseFloat(e.target.value))
+                    updateF("old_pret", parseFloat(e.target.value))
+                  }
+                  placeholder="old_pret"
+                />
+                <input
+                  value={updateItem.date}
+                  type="date"
+                  onChange={(e) => updateF("date", e.target.value)}
+                  placeholder="date"
+                />
+                <input
+                  type="number"
+                  value={updateItem.cantitate}
+                  onChange={(e) =>
+                    updateF("cantitate", parseFloat(e.target.value))
                   }
                   placeholder="cantitate"
                 />
-              </div>
-            </div>
-            <div className="actiuniProdus">
-              <button className="button-6" onClick={handleSubmit}>
-                ADAUGA
-              </button>
-              <button className="button-6" onClick={see}>
-                VIZUALIZEAZA
-              </button>
-            </div>
-          </div>
-        </section>
-        <br />
+
+                <div>
+                  {updateItem.images &&
+                    updateItem.images.map((img, index) => {
+                      // if (typeof img === "string")
+                      const remake = (e) => {
+                        return URL.createObjectURL(
+                          new Blob([e], { type: "application/zip" })
+                        );
+                      };
+
+                      if (img.slice(0, 5) === "https")
+                        return (
+                          <>
+                            <div>
+                              <img src={img} style={{ width: 100 }} />
+                              <button onClick={() => handleDelete(index)}>
+                                delete img
+                              </button>
+                            </div>
+                            <hr />
+                          </>
+                        );
+                      else {
+                        return (
+                          <>
+                            <div>
+                              <img src={remake(img)} style={{ width: 100 }} />
+                              <button onClick={() => handleDelete(index)}>
+                                delete img
+                              </button>
+                            </div>
+                            <hr />
+                          </>
+                        );
+                      }
+                    })}
+                  <input type="file" multiple onChange={addimgs} />
+                </div>
+                <button onClick={updateFCT}>update</button>
+                <button
+                  onClick={() => {
+                    // // console.log(updateItem);
+                    setUpdateState(false);
+                  }}
+                >
+                  inchide form
+                </button>
+              </section>
+            )}
+            <hr />
+            <br />
+            <button onClick={setLasts}>
+              Arata produsele cu cantitatea {"<"} 30{" "}
+            </button>
+            <button onClick={getProducts}>Arata toate produsele</button>
+            <button
+              onClick={async () => {
+                await firestore.readDocuments("products").then((res) => {
+                  res.sort((a, b) => b.rating - a.rating);
+                  setProducts(res);
+                });
+              }}
+            >
+              Arata cele mai apreciate produse produsele
+            </button>
+            <br />
+            <h1>Produse: </h1>
+            {products &&
+              products.map((prod) => {
+                return (
+                  <React.Fragment key={prod.id}>
+                    <br />
+                    <div style={{ margin: "0 20px" }}>
+                      <div className="buttons">
+                        <a href="#update">
+                          <button onClick={() => update(prod)}>
+                            update produs
+                          </button>
+                        </a>
+                        <button onClick={() => deletef(prod.id)}>
+                          delete produs
+                        </button>
+                      </div>
+                      <h3>nume produs: {prod.nume}</h3>
+                      <h5>data: {prod.date}</h5>
+                      <h5>categorie: {prod.categories}</h5>
+                      <h5>cantitate ramasa: {prod.cantitate}</h5>
+                      <h5>pret: {Placeholder.makenumber(prod.pret)}</h5>
+                      {prod.old_pret && prod.old_pret !== 0 && (
+                        <h5>
+                          pret vechi: {Placeholder.makenumber(prod.old_pret)}
+                        </h5>
+                      )}
+                      <div>
+                        {prod.images &&
+                          prod.images.map((img) => (
+                            <img
+                              src={img}
+                              key={img}
+                              style={{ width: 100, margin: 10 }}
+                            />
+                          ))}
+                      </div>
+                      <h5>rating: {prod.rating}</h5>
+                      <p>Descriere scurta: {prod.descriere_scurta}</p>
+                      <p>Descriere lunga: {prod.descriere_lunga}</p>
+                      <p>Informatii: {prod.info}</p>
+                      <h5>Reviews: </h5>
+                      <div>
+                        {prod && prod.reviews ? (
+                          prod.reviews.map((rev, index) => {
+                            return (
+                              <>
+                                <div className="media mb-4" key={index}>
+                                  {rev.user.img ? (
+                                    <img
+                                      src={rev.user.img}
+                                      alt="Image"
+                                      className="img-fluid mr-3 mt-1"
+                                      style={{ width: 45, borderRadius: "90%" }}
+                                    />
+                                  ) : (
+                                    <img
+                                      src={require("../img/user_placeholder.png")}
+                                      alt="Image"
+                                      className="img-fluid mr-3 mt-1"
+                                      style={{ width: 45, borderRadius: "90%" }}
+                                    />
+                                  )}
+                                  <div className="media-body">
+                                    <h6>
+                                      {rev.user.nume}
+                                      <small>
+                                        {" "}
+                                        - <i>{rev.date}</i>
+                                      </small>
+                                    </h6>
+                                    <div className="text-primary mb-2">
+                                      {[...Array(5)].map((e, index) => {
+                                        return (
+                                          <>
+                                            {index >= rev.rating ? (
+                                              <i
+                                                className="far fa-star"
+                                                key={index}
+                                              ></i>
+                                            ) : (
+                                              <i
+                                                className="fas fa-star"
+                                                key={index}
+                                              ></i>
+                                            )}
+                                          </>
+                                        );
+                                      })}
+                                    </div>
+                                    <p>{rev.review} </p>
+                                    <>
+                                      <button
+                                        className="btn btn-primary px-3"
+                                        onClick={() => {
+                                          delete_rev(rev);
+                                        }}
+                                      >
+                                        Delete review
+                                      </button>
+                                    </>
+                                  </div>
+                                </div>
+                              </>
+                            );
+                          })
+                        ) : (
+                          <h5>Nu sunt reviews pentru acest produs</h5>
+                        )}
+                      </div>
+                    </div>
+                    <hr />
+                  </React.Fragment>
+                );
+              })}
+          </section>
+        </div>
         <br />
         <hr />
-        <section className="prods">
-          {updateState && (
-            <section id="update">
-              <h1>Update form:</h1>
-              <textarea
-                placeholder="nume"
-                onChange={(e) => updateF("nume", e.target.value)}
-                cols="30"
-                rows="10"
-                value={updateItem.nume}
-              ></textarea>
-              <textarea
-                name=""
-                id=""
-                onChange={(e) => updateF("descriere_scurta", e.target.value)}
-                cols="30"
-                value={updateItem.descriere_scurta}
-                rows="10"
-                placeholder="descriere_scurta"
-              ></textarea>
-              <textarea
-                name=""
-                id=""
-                onChange={(e) => updateF("descriere_lunga", e.target.value)}
-                value={updateItem.descriere_lunga}
-                cols="30"
-                rows="10"
-                placeholder="descriere_lunga"
-              ></textarea>
-              <textarea
-                onChange={(e) => updateF("info", e.target.value)}
-                name=""
-                value={updateItem.info}
-                id=""
-                cols="30"
-                rows="10"
-                placeholder="info"
-              ></textarea>
-              <select onChange={(e) => updateF("categories", e.target.value)}>
-                <option value={updateItem.categories}>Alege o caterogie</option>
-                {categories &&
-                  categories.map((cat) => (
-                    <option key={cat.categorie} value={cat.categorie}>
-                      {cat.categorie}
-                    </option>
-                  ))}
-              </select>
-              <input
-                value={updateItem.pret}
-                type="number"
-                onChange={(e) => updateF("pret", parseFloat(e.target.value))}
-                placeholder="pret"
-              />
-              <input
-                value={updateItem.old_pret}
-                type="number"
-                onChange={(e) =>
-                  updateF("old_pret", parseFloat(e.target.value))
-                }
-                placeholder="old_pret"
-              />
-              <input
-                value={updateItem.date}
-                type="date"
-                onChange={(e) => updateF("date", e.target.value)}
-                placeholder="date"
-              />
-              <input
-                type="number"
-                value={updateItem.cantitate}
-                onChange={(e) =>
-                  updateF("cantitate", parseFloat(e.target.value))
-                }
-                placeholder="cantitate"
-              />
-
-              <div>
-                {updateItem.images &&
-                  updateItem.images.map((img, index) => {
-                    // if (typeof img === "string")
-                    const remake = (e) => {
-                      return URL.createObjectURL(
-                        new Blob([e], { type: "application/zip" })
-                      );
-                    };
-
-                    if (img.slice(0, 5) === "https")
-                      return (
-                        <>
-                          <div>
-                            <img src={img} style={{ width: 100 }} />
-                            <button onClick={() => handleDelete(index)}>
-                              delete img
-                            </button>
-                          </div>
-                          <hr />
-                        </>
-                      );
-                    else {
-                      return (
-                        <>
-                          <div>
-                            <img src={remake(img)} style={{ width: 100 }} />
-                            <button onClick={() => handleDelete(index)}>
-                              delete img
-                            </button>
-                          </div>
-                          <hr />
-                        </>
-                      );
-                    }
-                  })}
-                <input type="file" multiple onChange={addimgs} />
-              </div>
-              <button onClick={updateFCT}>update</button>
-              <button
-                onClick={() => {
-                  // // console.log(updateItem);
-                  setUpdateState(false);
-                }}
-              >
-                inchide form
-              </button>
-            </section>
-          )}
-          <hr />
-          <br />
-          <button onClick={setLasts}>
-            Arata produsele cu cantitatea {"<"} 30{" "}
-          </button>
-          <button onClick={getProducts}>Arata toate produsele</button>
-          <button
-            onClick={async () => {
-              await firestore.readDocuments("products").then((res) => {
-                res.sort((a, b) => b.rating - a.rating);
-                setProducts(res);
-              });
-            }}
-          >
-            Arata cele mai apreciate produse produsele
-          </button>
-          <br />
-          <h1>Produse: </h1>
-          {products &&
-            products.map((prod) => {
+        <br />
+        <div style={{ margin: "0 30px" }}>
+          <h1>Mesaje: </h1>
+          {mesajeContact &&
+            mesajeContact.map((mes) => {
               return (
-                <React.Fragment key={prod.id}>
-                  <br />
-                  <div style={{ margin: "0 20px" }}>
-                    <div className="buttons">
-                      <a href="#update">
-                        <button onClick={() => update(prod)}>
-                          update produs
-                        </button>
-                      </a>
-                      <button onClick={() => deletef(prod.id)}>
-                        delete produs
-                      </button>
-                    </div>
-                    <h3>nume produs: {prod.nume}</h3>
-                    <h5>data: {prod.date}</h5>
-                    <h5>categorie: {prod.categories}</h5>
-                    <h5>cantitate ramasa: {prod.cantitate}</h5>
-                    <h5>pret: {Placeholder.makenumber(prod.pret)}</h5>
-                    {prod.old_pret && prod.old_pret !== 0 && (
-                      <h5>
-                        pret vechi: {Placeholder.makenumber(prod.old_pret)}
-                      </h5>
-                    )}
-                    <div>
-                      {prod.images &&
-                        prod.images.map((img) => (
-                          <img
-                            src={img}
-                            key={img}
-                            style={{ width: 100, margin: 10 }}
-                          />
-                        ))}
-                    </div>
-                    <h5>rating: {prod.rating}</h5>
-                    <p>Descriere scurta: {prod.descriere_scurta}</p>
-                    <p>Descriere lunga: {prod.descriere_lunga}</p>
-                    <p>Informatii: {prod.info}</p>
-                    <h5>Reviews: </h5>
-                    <div>
-                      {prod && prod.reviews ? (
-                        prod.reviews.map((rev, index) => {
-                          return (
-                            <>
-                              <div className="media mb-4" key={index}>
-                                {rev.user.img ? (
-                                  <img
-                                    src={rev.user.img}
-                                    alt="Image"
-                                    className="img-fluid mr-3 mt-1"
-                                    style={{ width: 45, borderRadius: "90%" }}
-                                  />
-                                ) : (
-                                  <img
-                                    src={require("../img/user_placeholder.png")}
-                                    alt="Image"
-                                    className="img-fluid mr-3 mt-1"
-                                    style={{ width: 45, borderRadius: "90%" }}
-                                  />
-                                )}
-                                <div className="media-body">
-                                  <h6>
-                                    {rev.user.nume}
-                                    <small>
-                                      {" "}
-                                      - <i>{rev.date}</i>
-                                    </small>
-                                  </h6>
-                                  <div className="text-primary mb-2">
-                                    {[...Array(5)].map((e, index) => {
-                                      return (
-                                        <>
-                                          {index >= rev.rating ? (
-                                            <i
-                                              className="far fa-star"
-                                              key={index}
-                                            ></i>
-                                          ) : (
-                                            <i
-                                              className="fas fa-star"
-                                              key={index}
-                                            ></i>
-                                          )}
-                                        </>
-                                      );
-                                    })}
-                                  </div>
-                                  <p>{rev.review} </p>
-                                  <>
-                                    <button
-                                      className="btn btn-primary px-3"
-                                      onClick={() => {
-                                        delete_rev(rev);
-                                      }}
-                                    >
-                                      Delete review
-                                    </button>
-                                  </>
-                                </div>
-                              </div>
-                            </>
-                          );
-                        })
-                      ) : (
-                        <h5>Nu sunt reviews pentru acest produs</h5>
-                      )}
-                    </div>
+                <>
+                  <div key={mes.id}>
+                    <h4>
+                      {" "}
+                      <b> {mes.nume}</b> -{" "}
+                      <a href={`mailto: ${mes.email}`}>{mes.email}</a>{" "}
+                    </h4>
+                    <h5>
+                      {" "}
+                      <b>-</b>
+                      {mes.subject} <b>-</b>
+                    </h5>
+                    <p>{mes.message}</p>
+                    <button onClick={() => delete_mes(mes.id)}>
+                      Delete mesaj
+                    </button>
                   </div>
                   <hr />
-                </React.Fragment>
+                  <br />
+                </>
               );
             })}
-        </section>
-      </div>
-      <br />
-      <hr />
-      <br />
-      <div style={{ margin: "0 30px" }}>
-        <h1>Mesaje: </h1>
-        {mesajeContact &&
-          mesajeContact.map((mes) => {
-            return (
+        </div>
+        <div style={{ margin: "0 30px" }}>
+          <h1>Categorii: </h1>
+          <input type="text" onChange={(e) => setcate(e.target.value)} />
+          <button onClick={addc}>add categorie</button>
+          <br />
+          {categories &&
+            categories.map((cat) => (
               <>
-                <div key={mes.id}>
-                  <h4>
-                    {" "}
-                    <b> {mes.nume}</b> -{" "}
-                    <a href={`mailto: ${mes.email}`}>{mes.email}</a>{" "}
-                  </h4>
-                  <h5>
-                    {" "}
-                    <b>-</b>
-                    {mes.subject} <b>-</b>
-                  </h5>
-                  <p>{mes.message}</p>
-                  <button onClick={() => delete_mes(mes.id)}>
-                    Delete mesaj
+                <div key={cat.categorie}>
+                  <h3> {cat.categorie}</h3>
+                  <button onClick={() => deletecat(cat.id)}>
+                    delete categorie
                   </button>
                 </div>
                 <hr />
                 <br />
+                <br />
               </>
-            );
-          })}
-      </div>
-      <div style={{ margin: "0 30px" }}>
-        <h1>Categorii: </h1>
-        <input type="text" onChange={(e) => setcate(e.target.value)} />
-        <button onClick={addc}>add categorie</button>
-        <br />
-        {categories &&
-          categories.map((cat) => (
-            <>
-              <div key={cat.categorie}>
-                <h3> {cat.categorie}</h3>
-                <button onClick={() => deletecat(cat.id)}>
-                  delete categorie
-                </button>
-              </div>
-              <hr />
-              <br />
-              <br />
-            </>
-          ))}
-      </div>
-    </>
+            ))}
+        </div>
+      </>
+    ) : (
+      <h1> Nu ai acces aici</h1>
+    )
+  ) : (
+    <h1>Logheaza te ca sa ai acces aici</h1>
   );
 }
 
