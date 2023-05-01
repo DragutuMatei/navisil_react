@@ -68,6 +68,27 @@ function App() {
       });
   };
 
+  const fixCant = async (hidden) => {
+    console.log(hidden);
+    hidden.forEach(async (element) => {
+      await firestore.getProductById(element.id).then(async (res) => {
+        console.log(res.id, ": ", res.cantitate - element.cant);
+        await firestore
+          .updateDocument("products", res.id, {
+            cantitate: res.cantitate - element.cant,
+          })
+          .then((ress) => {
+            console.log(ress);
+          });
+      });
+    });
+
+    return true;
+    // return await firestore.updateDocument("products",).then(res => {
+
+    // })
+  };
+
   return (
     <Router>
       <Navbar cos={cos} />
@@ -78,13 +99,16 @@ function App() {
           element={<Shop addit={addit} />}
         />
         <Route path="/prod/:id" element={<ProductPage addit={addit} />} />
-        <Route path="/contact" Component={Contact} />
-        <Route path="/checkout" element={<Checkout finish={finish} />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route
+          path="/checkout"
+          element={<Checkout finish={finish} fixCant={fixCant} />}
+        />
         <Route
           path="/cart"
           element={<Cart delete_prod_app={delete_prod_app} update={update} />}
         />
-        <Route path="/admin" Component={AdminPage} />
+        <Route path="/admin" element={<AdminPage />} />
         <Route path="*" element={<Notfound />} />
       </Routes>
       <Footer />

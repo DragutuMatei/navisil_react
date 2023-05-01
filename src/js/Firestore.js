@@ -23,15 +23,15 @@ export default class Firestore {
   constructor() {
     // Initialize Firebase
     const firebaseConfig = {
-      apiKey: "AIzaSyAA7EhvqsU84_G03JK4Z_98M_z0cxsua8c",
-      authDomain: "ecommerce-ed019.firebaseapp.com",
+      apiKey: process.env.REACT_APP_APIKEY,
+      authDomain: process.env.REACT_APP_AUTHDOMAIN,
       databaseURL:
-        "https://ecommerce-ed019-default-rtdb.europe-west1.firebasedatabase.app",
-      projectId: "ecommerce-ed019",
-      storageBucket: "ecommerce-ed019.appspot.com",
-      messagingSenderId: "366894312098",
-      appId: "1:366894312098:web:1a7616c26abdb324c1c5fb",
-      measurementId: "G-KC7EV6D3TM",
+        process.env.REACT_APP_DATABSEURL,
+      projectId: process.env.REACT_APP_PROJECTID,
+      storageBucket: process.env.REACT_APP_STORAGEBUCKET,
+      messagingSenderId: process.env.REACT_APP_MESSAGINGSENDERID,
+      appId: process.env.REACT_APP_APPID,
+      measurementId: process.env.REACT_APP_MEASUREMENTID,
     };
 
     const app = initializeApp(firebaseConfig);

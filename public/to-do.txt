@@ -1,5 +1,4 @@
 sorting/filter (pret, reducere, ?? ) 
-//caz special: daca 0-100 si 100-200 selectate => 0-200
 final form la comenzi -doar plata mai e
 key words
 o scurta descriere 
@@ -13,7 +12,7 @@ brand --------------------------------
 politica de confidentialitate 
 politica de retur 
 date de firme 
-adaugare ramburs
+adaugare ramburs 
 > ceva pret transport gratuit
 
 sort => cele mai noi ---------------------
@@ -28,6 +27,6 @@ homa page -> oferte sapt
 
 
 shopping din admin
+//scadere din stoc general la finalizarea comenzii ---------------------
 
-
-!!!!!!!CUPOANE -STRATEGIE DE MARKETING
+!!!!!!! CUPOANE -STRATEGIE DE MARKETING

@@ -197,6 +197,9 @@ function Shop({ addit }) {
       //   arr = res;
       //   products = res;
       // });
+
+      
+
       if (categorie == "reducere") catt = ["old_pret", ">", 0];
       else catt = ["categories", "==", categorie];
       console.log(catt);
@@ -439,13 +442,6 @@ function Shop({ addit }) {
                   );
                 })}
               </div>
-            </div>
-
-            <h5 className="section-title position-relative text-uppercase mb-3">
-              <span className="bg-secondary pr-3">Filter by size</span>
-            </h5>
-            <div className="bg-light p-4 mb-30">
-              <div></div>
             </div>
           </div>
 

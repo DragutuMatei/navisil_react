@@ -9,7 +9,7 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 const firestore = new Firestore();
 const auth = getAuth();
 
-function Checkout({ finish }) {
+function Checkout({ finish, fixCant }) {
   const form = useRef();
   const [user, loading, error] = useAuthState(auth);
   const [products, setP] = useState([]);
@@ -41,7 +41,7 @@ function Checkout({ finish }) {
       ]);
     });
     setTotal(resp.total);
-    
+
     if (resp.total > 1000) setShip(0);
     else setShip(50);
   };
@@ -51,7 +51,6 @@ function Checkout({ finish }) {
 
   const sendEmail = async (e) => {
     e.preventDefault();
-    console.log(hidden);
 
     let a = `<div>
     <h3>Products: </h3>
@@ -118,7 +117,7 @@ function Checkout({ finish }) {
       template: a,
       last_name: last_name.value,
       first_name: first_name.value,
-      email: email.value
+      email: email.value,
     };
 
     await emailjs
@@ -134,8 +133,10 @@ function Checkout({ finish }) {
           console.log(result);
           if (result.status == 200) {
             alert("comanda plasata");
-            await finish().then((res) => {
-              navigate("/shop/all");
+            await finish().then(async (res) => {
+              await fixCant(hidden).then((res) => {
+                navigate("/shop/all");
+              });
             });
           } else {
             alert("a intervenit o problema la plasarea comenzii");
