@@ -20,7 +20,7 @@ sort => cele mai noi ---------------------
     => discount --------------------------
     => fara nume -------------------------
 
-
+!!!!!!!!!!require la forms
 
 homa page -> oferte sapt 
           -> slogan -> "la noi pretul e corect" -------------- 

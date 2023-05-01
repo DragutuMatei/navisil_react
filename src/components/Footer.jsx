@@ -54,6 +54,13 @@ function Footer() {
                   <i className="fa fa-angle-right mr-2"></i>Privacy Policy
                 </a>
                 <a
+                  className="text-secondary mb-2"
+                  target="_blank"
+                  href="https://www.termsandconditionsgenerator.com/live.php?token=nFeOTKuVre1uiQZZXarYuqbMeZEucb0P"
+                >
+                  <i className="fa fa-angle-right mr-2"></i>Terms and Conditions
+                </a>
+                <a
                   href="https://anpc.ro/ce-este-sal/"
                   target="_blank"
                   className="text-secondary mb-2"
@@ -141,7 +148,7 @@ function Footer() {
               Navisil
             </a>
             . All Rights Reserved. Designed by{" "}
-            <a className="text-primary" href="https://htmlcodex.com">
+            <a className="text-primary" href="#">
               Navisil
             </a>
           </p>
