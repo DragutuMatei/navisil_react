@@ -14,6 +14,8 @@ function ProductPage({ addit }) {
   const [user, loading, error] = useAuthState(firestore.getuser());
   const [produs, setProdus] = useState();
   const [value, setValue] = useState(1);
+  const [cant, setCant] = useState(0);
+  const [din_cos, setDinCos] = useState(0);
 
   const shareF = () => {
     window.open(
@@ -30,13 +32,27 @@ function ProductPage({ addit }) {
   };
 
   useEffect(() => {
-    firestore.getProductById(id).then((res) => {
+    firestore.getProductById(id).then(async (res) => {
       setProdus(res);
       getAlso(res.categories);
     });
   }, []);
-  const modi = (by) => {
-    if ((value >= 1 && by > 0) || value >= 2) setValue((old) => old + by);
+
+  const getcos = async () => {
+    // return await firestore.getCos(user);
+    let prods = await firestore.getProductByUser(user);
+    prods.cant = prods.cant.filter((prod) => id === prod.id);
+    console.log(prods.cant[0].cant);
+    setDinCos(prods.cant[0].cant);
+  };
+
+  const modi = async (by) => {
+    console.log(produs);
+    if ((value >= 1 && by > 0) || value >= 2)
+      if (produs.cantitate - din_cos - (value + by) >= 0)
+        setValue((old) => old + by);
+      else
+        alert(`Numarul maxim de produse disponibile este ${produs.cantitate}!`);
   };
   const addit_prod = async (cant) => {
     addit(id, cant);
@@ -58,6 +74,7 @@ function ProductPage({ addit }) {
   });
 
   useEffect(() => {
+    getcos();
     handlerev("user", {
       id: user && user.uid,
       img: user && user.photoURL,
@@ -396,6 +413,7 @@ function ProductPage({ addit }) {
                     type="number"
                     className="form-control bg-secondary border-0 text-center"
                     value={value}
+                    max={produs && produs.cantitate}
                   />
                   <div className="input-group-btn">
                     <button
@@ -410,6 +428,10 @@ function ProductPage({ addit }) {
                 {user ? (
                   <button
                     className="btn btn-primary px-3"
+                    disabled={
+                      produs &&
+                      (produs.cantitate - din_cos - value <= 0 ? true : false)
+                    }
                     onClick={() => addit_prod(value)}
                   >
                     <i className="fa fa-shopping-cart mr-1"></i> Add To Cart
@@ -427,6 +449,12 @@ function ProductPage({ addit }) {
                   </h4>
                 )}
               </div>
+              <p>
+                {produs &&
+                  (produs.cantitate - din_cos - value <= 0
+                    ? "Nu a mai ramas nici un produs"
+                    : `${produs.cantitate - din_cos - value} produse ramase`)}
+              </p>
               <div className="d-flex pt-2">
                 <strong className="text-dark mr-2">Share on:</strong>
                 <div className="d-inline-flex">

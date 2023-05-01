@@ -76,41 +76,61 @@ function AdminPage() {
   };
 
   const handleSubmit = async () => {
-    setLoadingPrd(true);
-    const storage = getStorage();
-    const downloadUrls = [];
+    if (
+      newItem.nume === "" ||
+      newItem.cantitate.toString() === "NaN" ||
+      newItem.categories === "" ||
+      newItem.date === "" ||
+      newItem.descriere_lunga === "" ||
+      newItem.descriere_scurta === "" ||
+      newItem.info === "" ||
+      newItem.pret.toString() === "NaN"
+    ) {
+      alert("completeaza toate campurile");
+      return;
+    } else {
+      setLoadingPrd(true);
+      const storage = getStorage();
+      const downloadUrls = [];
 
-    for (let i = 0; i < images.length; i++) {
-      const image = images[i];
-      const storageRef = ref(storage, `produse/${image.name}`);
-      try {
-        await uploadBytes(storageRef, image);
-        const url = await getDownloadURL(storageRef);
-        downloadUrls.push(url);
-      } catch (error) {
-        console.error(error);
+      for (let i = 0; i < images.length; i++) {
+        const image = images[i];
+        const storageRef = ref(storage, `produse/${image.name}`);
+        try {
+          await uploadBytes(storageRef, image);
+          const url = await getDownloadURL(storageRef);
+          downloadUrls.push(url);
+        } catch (error) {
+          console.error(error);
+        }
       }
+
+      let idk = {
+        ...newItem,
+        images: downloadUrls,
+      };
+
+      // setNewItem((old) => ({
+      // }));
+
+      // console.log(downloadUrls, idk);
+      // // console.log(newItem);
+
+      await firestore
+        .addItem("products", idk)
+        .then((res) => {
+          setLoadingPrd(false);
+          getProducts();
+          document.querySelectorAll(".addnewitem").forEach((input) => {
+            input.value = "";
+          });
+          alert("Produs adaugat");
+        })
+        .catch((er) => {
+          console.log(er);
+          setLoadingPrd(false);
+        });
     }
-
-    let idk = {
-      ...newItem,
-      images: downloadUrls,
-    };
-
-    // setNewItem((old) => ({
-    // }));
-
-    // console.log(downloadUrls, idk);
-    // // console.log(newItem);
-
-    await firestore.addItem("products", idk).then((res) => {
-      setLoadingPrd(false);
-      getProducts();
-      alert("Produs adaugat");
-    }).catch(er => {
-      console.log(er);
-      setLoadingPrd(false);
-    });
   };
 
   const [updateItem, setUpdateItem] = useState({
@@ -269,6 +289,8 @@ function AdminPage() {
               <div className="numeProdus">
                 <div className="addTitle">Nume Produs</div>
                 <input
+                  required
+                  className="addnewitem"
                   placeholder="Nume Produs"
                   onChange={(e) => modifield("nume", e.target.value)}
                   // cols="30"
@@ -279,6 +301,8 @@ function AdminPage() {
                 <div>
                   <div className="addCategorie">Categorie</div>
                   <select
+                    required
+                    className="addnewitem"
                     onChange={(e) => modifield("categories", e.target.value)}
                   >
                     <option>Alege o caterogie</option>
@@ -301,6 +325,8 @@ function AdminPage() {
                   <div>
                     <div>Pret</div>
                     <input
+                      required
+                      className="addnewitem"
                       type="number"
                       onChange={(e) =>
                         modifield("pret", parseFloat(e.target.value))
@@ -329,6 +355,8 @@ function AdminPage() {
           /> */}
                 <textarea
                   name=""
+                  required
+                  className="addnewitem"
                   id=""
                   onChange={(e) =>
                     modifield("descriere_scurta", e.target.value)
@@ -339,6 +367,8 @@ function AdminPage() {
                 ></textarea>
                 <textarea
                   name=""
+                  required
+                  className="addnewitem"
                   id=""
                   onChange={(e) => modifield("descriere_lunga", e.target.value)}
                   cols="30"
@@ -350,13 +380,21 @@ function AdminPage() {
             <div className="right">
               <div className="imagineProdus">
                 <div className="imagineTitle">Imagini Produs</div>
-                <input type="file" multiple onChange={handleFileInputChange} />
+                <input
+                  type="file"
+                  required
+                  className="addnewitem"
+                  multiple
+                  onChange={handleFileInputChange}
+                />
               </div>
               <div className="informatieProdus">
                 <div className="informatieTitle">Informatii Produs</div>
                 <textarea
                   onChange={(e) => modifield("info", e.target.value)}
                   name=""
+                  required
+                  className="addnewitem"
                   id=""
                   cols="30"
                   rows="10"
@@ -368,6 +406,8 @@ function AdminPage() {
                   <div>Data Primire</div>
                   <input
                     type="date"
+                    required
+                    className="addnewitem"
                     onChange={(e) => modifield("date", e.target.value)}
                     placeholder="date"
                   />
@@ -376,6 +416,8 @@ function AdminPage() {
                   <div>Cantitate Produs</div>
                   <input
                     type="number"
+                    required
+                    className="addnewitem"
                     onChange={(e) =>
                       modifield("cantitate", parseFloat(e.target.value))
                     }
@@ -389,9 +431,35 @@ function AdminPage() {
                     <span className="loader"></span>
                   </>
                 ) : (
-                  <button className="button-6" onClick={handleSubmit}>
-                    ADAUGA
-                  </button>
+                  <>
+                    <button className="button-6" onClick={handleSubmit}>
+                      ADAUGA
+                    </button>
+                    <button
+                      className="button-6"
+                      onClick={() => {
+                        console.log(newItem);
+                        console.log(newItem.cantitate.toString() === "NaN");
+                        if (
+                          newItem.nume === "" ||
+                          newItem.cantitate.toString() === "NaN" ||
+                          newItem.categories === "" ||
+                          newItem.date === "" ||
+                          newItem.descriere_lunga === "" ||
+                          newItem.descriere_scurta === "" ||
+                          newItem.info === "" ||
+                          newItem.pret.toString() === "NaN"
+                        ) {
+                          alert("completeaza toate campurile");
+                          return;
+                        } else {
+                          alert("ok");
+                        }
+                      }}
+                    >
+                      See
+                    </button>
+                  </>
                 )}{" "}
               </div>
             </div>
@@ -407,10 +475,12 @@ function AdminPage() {
                   placeholder="nume"
                   onChange={(e) => updateF("nume", e.target.value)}
                   cols="30"
+                  required
                   rows="10"
                   value={updateItem.nume}
                 ></textarea>
                 <textarea
+                  required
                   name=""
                   id=""
                   onChange={(e) => updateF("descriere_scurta", e.target.value)}
@@ -424,6 +494,7 @@ function AdminPage() {
                   id=""
                   onChange={(e) => updateF("descriere_lunga", e.target.value)}
                   value={updateItem.descriere_lunga}
+                  required
                   cols="30"
                   rows="10"
                   placeholder="descriere_lunga"
@@ -433,11 +504,15 @@ function AdminPage() {
                   name=""
                   value={updateItem.info}
                   id=""
+                  required
                   cols="30"
                   rows="10"
                   placeholder="info"
                 ></textarea>
-                <select onChange={(e) => updateF("categories", e.target.value)}>
+                <select
+                  required
+                  onChange={(e) => updateF("categories", e.target.value)}
+                >
                   <option value={updateItem.categories}>
                     Alege o caterogie
                   </option>
@@ -450,6 +525,7 @@ function AdminPage() {
                 </select>
                 <input
                   value={updateItem.pret}
+                  required
                   type="number"
                   onChange={(e) => updateF("pret", parseFloat(e.target.value))}
                   placeholder="pret"
@@ -464,6 +540,7 @@ function AdminPage() {
                 />
                 <input
                   value={updateItem.date}
+                  required
                   type="date"
                   onChange={(e) => updateF("date", e.target.value)}
                   placeholder="date"
@@ -471,6 +548,7 @@ function AdminPage() {
                 <input
                   type="number"
                   value={updateItem.cantitate}
+                  required
                   onChange={(e) =>
                     updateF("cantitate", parseFloat(e.target.value))
                   }
@@ -561,6 +639,12 @@ function AdminPage() {
                         </button>
                       </div>
                       <h3>nume produs: {prod.nume}</h3>
+                      <h4>
+                        Vezi produs:{" "}
+                        <a href={`/prod/${prod.id}`} target="blank">
+                          Link catre vizualizare produs
+                        </a>
+                      </h4>
                       <h5>data: {prod.date}</h5>
                       <h5>categorie: {prod.categories}</h5>
                       <h5>cantitate ramasa: {prod.cantitate}</h5>

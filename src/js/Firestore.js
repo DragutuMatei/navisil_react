@@ -74,7 +74,7 @@ export default class Firestore {
   }
 
   getuser() {
-    return this.auth;
+  return this.auth;
   }
 
   async getProductByUser(user) {

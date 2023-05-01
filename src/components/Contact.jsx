@@ -18,13 +18,25 @@ function Contact() {
   };
 
   const submit = async () => {
-    await firestore.uploadmessage(message).then((res) => {
-      if (res) {
-        alert("mesaj trimis");
-      } else {
-        alert("eroare");
-      }
-    });
+    if (
+      message.email === "" ||
+      message.nume === "" ||
+      message.message === "" ||
+      message.subject === ""
+    ) {
+      alert("Completeaza toate campurile");
+      return;
+    } else
+      await firestore.uploadmessage(message).then((res) => {
+        if (res) {
+          document.querySelectorAll(".form-control").forEach(input => {
+            input.value = "";
+          })
+          alert("mesaj trimis");
+        } else {
+          alert("eroare");
+        }
+      });
   };
 
   return (
@@ -57,20 +69,20 @@ function Contact() {
                     className="form-control"
                     id="name"
                     onChange={(e) => handlemessage("nume", e.target.value)}
+                    required
                     placeholder="Your Name"
-                    required="required"
                     data-validation-required-message="Please enter your name"
                   />
                   <p className="help-block text-danger"></p>
                 </div>
                 <div className="control-group">
                   <input
+                    required
                     type="email"
                     className="form-control"
                     id="email"
                     onChange={(e) => handlemessage("email", e.target.value)}
                     placeholder="Your Email"
-                    required="required"
                     data-validation-required-message="Please enter your email"
                   />
                   <p className="help-block text-danger"></p>
@@ -82,7 +94,7 @@ function Contact() {
                     onChange={(e) => handlemessage("subject", e.target.value)}
                     id="subject"
                     placeholder="Subject"
-                    required="required"
+                    required
                     data-validation-required-message="Please enter a subject"
                   />
                   <p className="help-block text-danger"></p>
@@ -94,7 +106,7 @@ function Contact() {
                     onChange={(e) => handlemessage("message", e.target.value)}
                     id="message"
                     placeholder="Message"
-                    required="required"
+                    required
                     data-validation-required-message="Please enter your message"
                   ></textarea>
                   <p className="help-block text-danger"></p>

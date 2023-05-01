@@ -31,9 +31,14 @@ function Cart({ delete_prod_app, update }) {
     if (objectToUpdate.cant + by <= 0) return;
 
     if (objectToUpdate) {
-      objectToUpdate.cant = objectToUpdate.cant + by;
-
-      setP(updateObjectInArray(products, objectToUpdate));
+      if (objectToUpdate.cant + by <= objectToUpdate.cantitate) {
+        objectToUpdate.cant = objectToUpdate.cant + by;
+        setP(updateObjectInArray(products, objectToUpdate));
+      } else {
+        alert(
+          `Numarul maxim de produse disponibile este ${objectToUpdate.cantitate}!`
+        );
+      }
     }
   };
 
