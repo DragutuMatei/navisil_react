@@ -43,19 +43,47 @@ function Footer() {
                 </Link>
               </div>
             </div>
-            {/* <div className="col-md-4 mb-5">
-              <h5 className="text-secondary text-uppercase mb-4">My Account</h5>
+            <div className="col-md-4 mb-5">
+              <h5 className="text-secondary text-uppercase mb-4">Documents</h5>
               <div className="d-flex flex-column justify-content-start">
-                <a className="text-secondary mb-2" href="#">
-                  <i className="fa fa-angle-right mr-2"></i>Home
+                <a
+                  className="text-secondary mb-2"
+                  target="_blank"
+                  href="https://www.privacypolicygenerator.info/live.php?token=9bKCKkYtNFrLxEXPOCt8vFYqyfKd1ftw"
+                >
+                  <i className="fa fa-angle-right mr-2"></i>Privacy Policy
                 </a>
-                <a className="text-secondary mb-2" href="#">
-                  <i className="fa fa-angle-right mr-2"></i>Our Shop
+                <a
+                  href="https://anpc.ro/ce-este-sal/"
+                  target="_blank"
+                  className="text-secondary mb-2"
+                  rel="noopener"
+                  title="ANPC Soluționarea alternativă a litigiilor"
+                >
+                  <img
+                    width="201"
+                    height="50"
+                    loading="lazy"
+                    src={require("../img/legals/SAL.png")}
+                    alt="Soluționarea alternativă a litigiilor"
+                  />
                 </a>
-                <a className="text-secondary mb-2" href="#">
-                  <i className="fa fa-angle-right mr-2"></i>Shop Detail
+                <a
+                  className="text-secondary mb-2"
+                  href="https://ec.europa.eu/consumers/odr"
+                  target="_blank"
+                  rel="noopener"
+                  title="Soluționarea online a litigiilor"
+                >
+                  <img
+                    width="201"
+                    height="50"
+                    loading="lazy"
+                    src={require("../img/legals/SOL.png")}
+                    alt="Soluționarea online a litigiilor"
+                  />
                 </a>
-                <a className="text-secondary mb-2" href="#">
+                {/* <a className="text-secondary mb-2" href="#">
                   <i className="fa fa-angle-right mr-2"></i>Shopping Cart
                 </a>
                 <a className="text-secondary mb-2" href="#">
@@ -63,9 +91,9 @@ function Footer() {
                 </a>
                 <a className="text-secondary" href="#">
                   <i className="fa fa-angle-right mr-2"></i>Contact Us
-                </a>
+                </a> */}
               </div>
-            </div> */}
+            </div>
             <div className="col-md-4 mb-5">
               <h5 className="text-secondary text-uppercase mb-4">Newsletter</h5>
               <p>Duo stet tempor ipsum sit amet magna ipsum tempor est</p>
