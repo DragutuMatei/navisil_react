@@ -23,7 +23,7 @@ function Home({ addit }) {
     await firestore
       .readDocuments("products", ["rating", ">=", 4], 8)
       .then((res) => {
-        console.log(res[i].rating);
+        // console.log(res[i].rating);
         setFeatures(res);
       });
   };

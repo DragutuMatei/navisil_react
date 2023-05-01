@@ -10,6 +10,7 @@ const firestore = new Firestore();
 const auth = getAuth();
 
 function Checkout({ finish, fixCant }) {
+  const [loading_send, setLoadingSend] = useState(false);
   const form = useRef();
   const [user, loading, error] = useAuthState(auth);
   const [products, setP] = useState([]);
@@ -51,6 +52,7 @@ function Checkout({ finish, fixCant }) {
 
   const sendEmail = async (e) => {
     e.preventDefault();
+    setLoadingSend(true);
 
     let a = `<div>
     <h3>Products: </h3>
@@ -122,11 +124,11 @@ function Checkout({ finish, fixCant }) {
 
     await emailjs
       .send(
-        "service_ea5w2pg",
-        "template_z989gy9",
+        process.env.REACT_APP_SERVICEID_EMAIL,
+        process.env.REACT_APP_TEMPLATEID_EMAIL,
         // form.current,
         templateParams,
-        "user_3dO0i6OPdpXqoxoHSNrwB"
+        process.env.REACT_APP_PUBLICKEY_EMAIL
       )
       .then(
         async (result) => {
@@ -135,6 +137,7 @@ function Checkout({ finish, fixCant }) {
             alert("comanda plasata");
             await finish().then(async (res) => {
               await fixCant(hidden).then((res) => {
+                setLoadingSend(false);
                 navigate("/shop/all");
               });
             });
@@ -465,12 +468,26 @@ function Checkout({ finish, fixCant }) {
                     </label>
                   </div>
                 </div>
-                <button
-                  type="submit"
-                  className="btn btn-block btn-primary font-weight-bold py-3"
-                >
-                  Place Order
-                </button>
+                {loading_send ? (
+                  <div className="form-group" style={{ marginTop: 50 }}>
+                    <span
+                      className="loader custom-control custom-checkbox"
+                      style={{
+                        position: "relative",
+                        margin: "auto",
+                      }}
+                    ></span>
+                  </div>
+                ) : (
+                  <>
+                    <button
+                      type="submit"
+                      className="btn btn-block btn-primary font-weight-bold py-3"
+                    >
+                      Place Order
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           </div>

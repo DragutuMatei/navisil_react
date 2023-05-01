@@ -18,15 +18,27 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
+/**
+ * REACT_APP_APIKEY= AIzaSyAA7EhvqsU84_G03JK4Z_98M_z0cxsua8c,
+REACT_APP_AUTHDOMAIN= ecommerce-ed019.firebaseapp.com,
+REACT_APP_DATABSEURL=https://ecommerce-ed019-default-rtdb.europe-west1.firebasedatabase.app,
+REACT_APP_PROJECTID= ecommerce-ed019,
+REACT_APP_STORAGEBUCKET= ecommerce-ed019.appspot.com,
+REACT_APP_MESSAGINGSENDERID= 366894312098,
+REACT_APP_APPID= 1:366894312098:web:1a7616c26abdb324c1c5fb,
+REACT_APP_MEASUREMENTID= G-KC7EV6D3TM,
 
+REACT_APP_SERVICEID_EMAIL= service_ea5w2pg,
+REACT_APP_TEMPLATEID_EMAIL=template_z989gy9,
+REACT_APP_PUBLICKEY_EMAIL=user_3dO0i6OPdpXqoxoHSNrwB,
+ */
 export default class Firestore {
   constructor() {
     // Initialize Firebase
     const firebaseConfig = {
       apiKey: process.env.REACT_APP_APIKEY,
       authDomain: process.env.REACT_APP_AUTHDOMAIN,
-      databaseURL:
-        process.env.REACT_APP_DATABSEURL,
+      databaseURL: process.env.REACT_APP_DATABSEURL,
       projectId: process.env.REACT_APP_PROJECTID,
       storageBucket: process.env.REACT_APP_STORAGEBUCKET,
       messagingSenderId: process.env.REACT_APP_MESSAGINGSENDERID,
