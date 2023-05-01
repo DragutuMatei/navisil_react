@@ -198,8 +198,6 @@ function Shop({ addit }) {
       //   products = res;
       // });
 
-      
-
       if (categorie == "reducere") catt = ["old_pret", ">", 0];
       else catt = ["categories", "==", categorie];
       console.log(catt);
@@ -531,6 +529,7 @@ function Shop({ addit }) {
               {products && products != [] ? (
                 products.map((prod) => (
                   <Product
+                    cantitate={prod.cantitate}
                     key={prod.id}
                     id={prod.id}
                     addit={addit}

@@ -4,35 +4,45 @@ import Firestore from "../js/Firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Placeholder from "../util/Placeholder";
 import Text from "../util/Text";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const firestore = new Firestore();
-function Product({ img, link, name, price, oldPrice, id, addit, rating }) {
+function Product({
+  cantitate,
+  img,
+  link,
+  name,
+  price,
+  oldPrice,
+  id,
+  addit,
+  rating,
+}) {
   const [user, loading, error] = useAuthState(firestore.getuser());
-  const addit_prod = async (cant) => {
-    addit(id, cant);
-  };
-  /**
-   * 
-async function getProduct(productId) {
-  const db = getFirestore();
-  const productRef = doc(db, "products", productId);
+  const [din_cos, setDinCos] = useState(0);
+  const [count, setCount] = useState(0);
 
-  try {
-    const productSnap = await getDoc(productRef);
-    if (productSnap.exists()) {
-      return productSnap.data();
-    } else {
-      // console.log("No such document exists!");
-      return null;
+  useEffect(() => {
+    getcos();
+  }, [count, user]);
+
+  const getcos = async () => {
+    // return await firestore.getCos(user);
+    let prods = await firestore.getProductByUser(user);
+    prods.cant = prods.cant.filter((prod) => id === prod.id);
+    console.log(prods.cant[0].cant);
+    setDinCos(prods.cant[0].cant);
+  };
+
+
+  const addit_prod = async (cant) => {
+    setCount((old) => old + 1);
+    if (cant + din_cos <= cantitate) addit(id, cant);
+    else {
+      alert(`Numarul maxim de produse disponibile este ${cantitate}!`);
     }
-  } catch (error) {
-    // console.log("Error getting document:", error);
-    return null;
-  }
-}
-   * 
-   * 
-   */
+  };
 
   return (
     <div
@@ -58,14 +68,15 @@ async function getProduct(productId) {
           }}
         >
           <span>
-           - {Placeholder.makenumber(
+            -{" "}
+            {Placeholder.makenumber(
               Placeholder.roundit(((oldPrice - price) / oldPrice) * 100, 1)
             )}
           </span>
           <span
             style={{
               fontSize: 20,
-              marginLeft:3
+              marginLeft: 3,
             }}
           >
             %

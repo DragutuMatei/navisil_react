@@ -55,6 +55,7 @@ function App() {
     await firestore
       .updateDocument("cos", uid, { cantitate: cant })
       .then((res) => {
+        setCosEv((old) => old + 32);
         alert("cantitatea s-a updatat!");
       });
   };

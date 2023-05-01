@@ -292,6 +292,7 @@ function Home({ addit }) {
               return (
                 <>
                   <Product
+                    cantitate={prod.cantitate}
                     key={prod.id}
                     id={prod.id}
                     addit={addit}

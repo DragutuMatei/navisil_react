@@ -13,8 +13,7 @@ function ProductPage({ addit }) {
   const { id } = useParams("id");
   const [user, loading, error] = useAuthState(firestore.getuser());
   const [produs, setProdus] = useState();
-  const [value, setValue] = useState(1);
-  const [cant, setCant] = useState(0);
+  const [value, setValue] = useState(0);
   const [din_cos, setDinCos] = useState(0);
 
   const shareF = () => {
@@ -39,23 +38,49 @@ function ProductPage({ addit }) {
   }, []);
 
   const getcos = async () => {
-    // return await firestore.getCos(user);
     let prods = await firestore.getProductByUser(user);
-    prods.cant = prods.cant.filter((prod) => id === prod.id);
-    console.log(prods.cant[0].cant);
-    setDinCos(prods.cant[0].cant);
+    if (prods.length == 0) {
+      return;
+    } else {
+      let okk = prods.cant.filter((prod) => id === prod.id);
+      if (okk[0] && okk[0].hasOwnProperty("cant")) {
+        setDinCos(okk[0].cant);
+      }
+    }
   };
 
   const modi = async (by) => {
-    console.log(produs);
-    if ((value >= 1 && by > 0) || value >= 2)
-      if (produs.cantitate - din_cos - (value + by) >= 0)
-        setValue((old) => old + by);
-      else
-        alert(`Numarul maxim de produse disponibile este ${produs.cantitate}!`);
+    // await getcos();
+    if ((value >= 0 && by > 0) || value >= 1)
+      if (din_cos != 0) {
+        if (produs.cantitate - din_cos - (value + by) >= 0)
+          setValue((old) => old + by);
+        else
+          alert(
+            `Numarul maxim de produse disponibile este ${produs.cantitate}!`
+          );
+      } else {
+        if (produs.cantitate - (value + by) >= 0) setValue((old) => old + by);
+        else
+          alert(
+            `Numarul maxim de produse disponibile este ${produs.cantitate}!`
+          );
+      }
   };
   const addit_prod = async (cant) => {
-    addit(id, cant);
+    if (cant == 0) return;
+
+    if (din_cos == 0) {
+      if (cant <= produs.cantitate) {
+        addit(id, cant);
+      }
+    } else if (cant + din_cos <= produs.cantitate) {
+      addit(id, cant);
+    }
+
+    document.querySelector(".kkkk").value = 0;
+    setValue(0);
+    await getcos();
   };
   const signInWithGoogle = async () => {
     await firestore.signInWithGoogle();
@@ -143,12 +168,13 @@ function ProductPage({ addit }) {
     }
   };
   const leaverev = async () => {
-    await firestore.leaveRev(id, review).then((res) => {
-      // console.log(res);
-      firestore.getProductById(id).then((res) => {
-        setProdus(res);
+    if (review.review === "" || review.rating === 0) alert("Lasa un review!");
+    else
+      await firestore.leaveRev(id, review).then((res) => {
+        firestore.getProductById(id).then((res) => {
+          setProdus(res);
+        });
       });
-    });
   };
 
   const delete_rev = async (rev) => {
@@ -411,7 +437,7 @@ function ProductPage({ addit }) {
                   </div>
                   <input
                     type="number"
-                    className="form-control bg-secondary border-0 text-center"
+                    className="kkkk form-control bg-secondary border-0 text-center"
                     value={value}
                     max={produs && produs.cantitate}
                   />
@@ -429,8 +455,7 @@ function ProductPage({ addit }) {
                   <button
                     className="btn btn-primary px-3"
                     disabled={
-                      produs &&
-                      (produs.cantitate - din_cos - value <= 0 ? true : false)
+                      produs && (produs.cantitate - din_cos <= 0 ? true : false)
                     }
                     onClick={() => addit_prod(value)}
                   >
@@ -720,6 +745,7 @@ function ProductPage({ addit }) {
                   if (prod.id !== id)
                     return (
                       <Product
+                        cantitate={prod.cantitate}
                         key={prod.id}
                         id={prod.id}
                         addit={addit}
