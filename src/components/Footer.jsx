@@ -60,6 +60,13 @@ function Footer() {
                 >
                   <i className="fa fa-angle-right mr-2"></i>Terms and Conditions
                 </a>
+                <Link
+                  className="text-secondary mb-2"
+                  target="_blank"
+                  to="/return"
+                >
+                  <i className="fa fa-angle-right mr-2"></i>Return Policy
+                </Link>
                 <a
                   href="https://anpc.ro/ce-este-sal/"
                   target="_blank"

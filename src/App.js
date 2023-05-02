@@ -20,6 +20,7 @@ import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Cart from "./components/Cart";
 import Notfound from "./components/Notfound";
+import Return from "./components/Return";
 
 const firestore = new Firestore();
 const auth = getAuth();
@@ -110,6 +111,7 @@ function App() {
           element={<Cart delete_prod_app={delete_prod_app} update={update} />}
         />
         <Route path="/admin" element={<AdminPage />} />
+        <Route path="/return" element={<Return />} />
         <Route path="*" element={<Notfound />} />
       </Routes>
       <Footer />

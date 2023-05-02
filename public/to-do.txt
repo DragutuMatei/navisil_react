@@ -1,8 +1,8 @@
-sorting/filter (pret, reducere, ?? ) 
+sorting/filter (pret, reducere, ?? ) ---------
 final form la comenzi -doar plata mai e
 key words
 o scurta descriere 
-loading
+loading -------------------------------
 
 + CE AI DE Adaugat
 reducere de atat %---------------------
@@ -20,13 +20,12 @@ sort => cele mai noi ---------------------
     => discount --------------------------
     => fara nume -------------------------
 
-!!!!!!!!!!require la forms------------------
+!!!!!!!!!!require la forms ------------------
 
-homa page -> oferte sapt 
+homa page -> oferte sapt -------------------------------------
           -> slogan -> "la noi pretul e corect" -------------- 
 
 
-shopping din admin
 //scadere din stoc general la finalizarea comenzii ---------------------
 
 !!!!!!! CUPOANE -STRATEGIE DE MARKETING
