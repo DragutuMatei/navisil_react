@@ -169,7 +169,6 @@ function Checkout({ finish, fixCant }) {
       </div>
 
       <div className="container-fluid">
-        {" "}
         <div className="bg-light p-30 mb-5">
           <div className="border-bottom">
             <h6 className="mb-3">Products</h6>
@@ -185,7 +184,7 @@ function Checkout({ finish, fixCant }) {
                       <p>{prod.nume}</p>
                     </Link>
                     <p style={{ margin: 0, textAlign: "end" }}>
-                      {prod.cant.toLocaleString("en-US")} x {" "}
+                      {prod.cant.toLocaleString("en-US")} x{" "}
                       {prod.pret.toLocaleString("en-US")} RON
                     </p>
                   </div>

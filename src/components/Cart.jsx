@@ -59,7 +59,6 @@ function Cart({ delete_prod_app, update }) {
   const ok = async () => {
     let resp = await firestore.getProductByUser(user);
     setP(resp.cant);
-    // setTotal(resp.total);
   };
   useEffect(() => {
     ok();
@@ -106,8 +105,7 @@ function Cart({ delete_prod_app, update }) {
                       <h3>Logheaza te ca sa adaugi in cos produse</h3>
                     </td>
                   </tr>
-                ) : (
-                  products &&
+                ) : products && products.length !== 0 ? (
                   products.map((prod) => {
                     let total_map = prod.pret * prod.cant;
 
@@ -177,7 +175,8 @@ function Cart({ delete_prod_app, update }) {
                         <td className="align-middle">
                           {total_map
                             ? Placeholder.makenumber(total_map)
-                            : "..."} RON
+                            : "..."}{" "}
+                          RON
                         </td>
                         <td className="align-middle">
                           <button
@@ -190,6 +189,8 @@ function Cart({ delete_prod_app, update }) {
                       </tr>
                     );
                   })
+                ) : (
+                  <h3>Cosul este gol</h3>
                 )}
               </tbody>
             </table>
