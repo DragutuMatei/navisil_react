@@ -171,6 +171,15 @@ function ProductPage({ addit }) {
     if (review.review === "" || review.rating === 0) alert("Lasa un review!");
     else
       await firestore.leaveRev(id, review).then((res) => {
+        console.log(res);
+        document.querySelector(".revinput").value = "";
+        setRated(-1);
+        for (let i = 0; i < 5; i++) {
+          document.querySelectorAll(".STEA_REV")[i].classList.remove("fa-star");
+          document.querySelectorAll(".STEA_REV")[i].classList.remove("fas");
+          document.querySelectorAll(".STEA_REV")[i].classList.add("far");
+          document.querySelectorAll(".STEA_REV")[i].classList.add("fa-star");
+        }
         firestore.getProductById(id).then((res) => {
           setProdus(res);
         });
@@ -705,7 +714,7 @@ function ProductPage({ addit }) {
                                 onChange={(e) =>
                                   handlerev("review", e.target.value)
                                 }
-                                className="form-control"
+                                className="form-control revinput"
                               ></textarea>
                             </div>
 
