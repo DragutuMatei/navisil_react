@@ -353,9 +353,8 @@ function Shop({ addit }) {
                           htmlFor={`price-${index}`}
                         >
                           {index <= 5
-                            ? (ar[0] === "over" ? "> " : "$" + ar[0] + " - ") +
-                              "$" +
-                              ar[1]
+                            ? (ar[0] === "over" ? "> " : ar[0] + " - ") +
+                              ar[1] +" RON"
                             : index == 6 && <>Discount</>}
                         </label>
                       </div>

@@ -308,7 +308,7 @@ function ProductPage({ addit }) {
                 </small>
               </div>
               <h3 className="font-weight-semi-bold mb-4">
-                ${produs && produs.pret}
+                {produs && produs.pret} RON
               </h3>
               <p className="mb-4">{produs && produs.descriere_scurta}</p>
               {/* <div className="d-flex mb-3">

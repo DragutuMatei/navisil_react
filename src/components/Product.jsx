@@ -121,10 +121,10 @@ function Product({
           </a>
 
           <div className="d-flex align-items-center justify-content-center mt-2">
-            <h5>${Placeholder.makenumber(price)}</h5>
+            <h5>{Placeholder.makenumber(price)} RON</h5>
             {oldPrice > 0 && (
               <h6 className="text-muted ml-2">
-                <del>${Placeholder.makenumber(oldPrice)}</del>
+                <del>{Placeholder.makenumber(oldPrice)} RON</del>
               </h6>
             )}
           </div>

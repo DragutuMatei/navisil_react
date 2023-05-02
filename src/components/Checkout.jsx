@@ -185,8 +185,8 @@ function Checkout({ finish, fixCant }) {
                       <p>{prod.nume}</p>
                     </Link>
                     <p style={{ margin: 0, textAlign: "end" }}>
-                      {prod.cant.toLocaleString("en-US")} x $
-                      {prod.pret.toLocaleString("en-US")}
+                      {prod.cant.toLocaleString("en-US")} x {" "}
+                      {prod.pret.toLocaleString("en-US")} RON
                     </p>
                   </div>
                 );
@@ -195,19 +195,19 @@ function Checkout({ finish, fixCant }) {
           <div className="border-bottom pt-3 pb-2">
             <div className="d-flex justify-content-between mb-3">
               <h6>Subtotal</h6>
-              <h6>${total.toLocaleString("en-US")}</h6>
+              <h6>{total.toLocaleString("en-US")} RON</h6>
             </div>
             <div className="d-flex justify-content-between">
               <h6 className="font-weight-medium">Shipping</h6>
               <h6 className="font-weight-medium">
-                ${ship.toLocaleString("en-US")}
+                {ship.toLocaleString("en-US")} RON
               </h6>
             </div>
           </div>
           <div className="pt-2">
             <div className="d-flex justify-content-between mt-2">
               <h5>Total</h5>
-              <h5>${(total + ship).toLocaleString("en-US")}</h5>
+              <h5>{(total + ship).toLocaleString("en-US")} RON</h5>
             </div>
           </div>
         </div>

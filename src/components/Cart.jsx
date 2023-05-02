@@ -131,7 +131,7 @@ function Cart({ delete_prod_app, update }) {
                           </Link>
                         </td>
                         <td className="align-middle">
-                          ${Placeholder.makenumber(prod.pret)}
+                          {Placeholder.makenumber(prod.pret)} RON
                         </td>
                         <td className="align-middle">
                           <div
@@ -175,10 +175,9 @@ function Cart({ delete_prod_app, update }) {
                           </div>
                         </td>
                         <td className="align-middle">
-                          $
                           {total_map
                             ? Placeholder.makenumber(total_map)
-                            : "..."}
+                            : "..."} RON
                         </td>
                         <td className="align-middle">
                           <button
@@ -203,12 +202,12 @@ function Cart({ delete_prod_app, update }) {
               <div className="border-bottom pb-2">
                 <div className="d-flex justify-content-between mb-3">
                   <h6>Subtotal</h6>
-                  <h6>${total ? Placeholder.makenumber(total) : "..."}</h6>
+                  <h6>{total ? Placeholder.makenumber(total) : "..."} RON</h6>
                 </div>
                 <div className="d-flex justify-content-between">
                   <h6 className="font-weight-medium">Shipping</h6>
                   <h6 className="font-weight-medium">
-                    ${Placeholder.makenumber(ship)}
+                    {Placeholder.makenumber(ship)} RON
                   </h6>
                 </div>
               </div>
@@ -217,7 +216,7 @@ function Cart({ delete_prod_app, update }) {
                   <h5>Total</h5>
                   <h5>
                     {" "}
-                    ${total ? Placeholder.makenumber(total + ship) : "..."}
+                    {total ? Placeholder.makenumber(total + ship) : "..."} RON
                   </h5>
                 </div>
                 {user && total ? (
