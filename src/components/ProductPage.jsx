@@ -738,7 +738,7 @@ function ProductPage({ addit }) {
           <span className="bg-secondary pr-3">You May Also Like</span>
         </h2>
         <div className="row px-xl-5">
-          <div className="col-lg-9 col-md-8">
+          <div className="col-lg-18 col-md-8">
             <div className="row pb-3 products">
               {also && also.length !== 1 ? (
                 also.map((prod, index) => {

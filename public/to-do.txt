@@ -9,10 +9,10 @@ reducere de atat %---------------------
 sort dupa reducere---------------------
 brand --------------------------------
 + precizare curier 
-politica de confidentialitate 
+politica de confidentialitate ----------
 politica de retur 
 date de firme 
-adaugare ramburs 
+adaugare ramburs -----------------------
 > ceva pret transport gratuit
 
 sort => cele mai noi ---------------------
@@ -20,7 +20,7 @@ sort => cele mai noi ---------------------
     => discount --------------------------
     => fara nume -------------------------
 
-!!!!!!!!!!require la forms
+!!!!!!!!!!require la forms------------------
 
 homa page -> oferte sapt 
           -> slogan -> "la noi pretul e corect" -------------- 

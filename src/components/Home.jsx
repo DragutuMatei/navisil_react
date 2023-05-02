@@ -9,6 +9,7 @@ import Firestore from "../js/Firestore";
 import { async } from "@firebase/util";
 import { Link } from "react-router-dom";
 import Text from "../util/Text";
+import Placeholder from "../util/Placeholder";
 // import "../lib/easing/easing.min.js";
 // import "../lib/owlcarousel/owl.carousel.min.js";
 
@@ -26,6 +27,15 @@ function Home({ addit }) {
         // console.log(res[i].rating);
         setFeatures(res);
       });
+  };
+
+  const [two, setTwo] = useState([]);
+  const getSomeCat = async () => {
+    console.log(["date", "<=", Placeholder.getdate()]);
+    await firestore.readCosmin().then((res) => {
+      setTwo(res);
+      console.log(res);
+    });
   };
 
   const getCategories = async () => {
@@ -47,6 +57,7 @@ function Home({ addit }) {
   useEffect(() => {
     getCategories();
     getFeatures();
+    getSomeCat();
   }, []);
 
   return (
@@ -170,11 +181,18 @@ function Home({ addit }) {
                 alt=""
               />
               <div className="offer-text">
-                <h6 className="text-white text-uppercase">Save 20%</h6>
-                <h3 className="text-white mb-3">Special Offer</h3>
-                <a href="" className="btn btn-primary">
-                  Shop Now
-                </a>
+                <h6 className="text-white text-uppercase">Lastest products</h6>
+                <h3 className="text-white mb-3">
+                  {two && two.length == 2 && two[0].categorie}
+                </h3>
+                {two && two.length == 2 && (
+                  <Link
+                    to={`/shop/${two[0].categorie}`}
+                    className="btn btn-primary"
+                  >
+                    Shop Now
+                  </Link>
+                )}
               </div>
             </div>{" "}
             <div className="product-offer mb-30" style={{ height: "200px" }}>
@@ -184,11 +202,18 @@ function Home({ addit }) {
                 alt=""
               />
               <div className="offer-text">
-                <h6 className="text-white text-uppercase">Save 20%</h6>
-                <h3 className="text-white mb-3">Special Offer</h3>
-                <a href="" className="btn btn-primary">
-                  Shop Now
-                </a>
+                <h6 className="text-white text-uppercase">Lastest products</h6>
+                <h3 className="text-white mb-3">
+                  {two && two.length == 2 && two[1].categorie}
+                </h3>
+                {two && two.length == 2 && (
+                  <Link
+                    to={`/shop/${two[1].categorie}`}
+                    className="btn btn-primary"
+                  >
+                    Shop Now
+                  </Link>
+                )}
               </div>
             </div>
           </div>
@@ -321,11 +346,18 @@ function Home({ addit }) {
                 alt=""
               />
               <div className="offer-text">
-                <h6 className="text-white text-uppercase">Save 20%</h6>
-                <h3 className="text-white mb-3">Special Offer</h3>
-                <a href="" className="btn btn-primary">
-                  Shop Now
-                </a>
+                <h6 className="text-white text-uppercase">Lastest products</h6>
+                <h3 className="text-white mb-3">
+                  {two && two.length == 2 && two[0].categorie}
+                </h3>
+                {two && two.length == 2 && (
+                  <Link
+                    to={`/shop/${two[0].categorie}`}
+                    className="btn btn-primary"
+                  >
+                    Shop Now
+                  </Link>
+                )}
               </div>
             </div>
           </div>
@@ -338,11 +370,18 @@ function Home({ addit }) {
                 alt=""
               />
               <div className="offer-text">
-                <h6 className="text-white text-uppercase">Save 20%</h6>
-                <h3 className="text-white mb-3">Special Offer</h3>
-                <a href="" className="btn btn-primary">
-                  Shop Now
-                </a>
+                <h6 className="text-white text-uppercase">Lastest products</h6>
+                <h3 className="text-white mb-3">
+                  {two && two.length == 2 && two[1].categorie}
+                </h3>
+                {two && two.length == 2 && (
+                  <Link
+                    to={`/shop/${two[1].categorie}`}
+                    className="btn btn-primary"
+                  >
+                    Shop Now
+                  </Link>
+                )}
               </div>
             </div>
           </div>

@@ -74,7 +74,24 @@ export default class Firestore {
   }
 
   getuser() {
-  return this.auth;
+    return this.auth;
+  }
+
+  async readCosmin() {
+    let q = query(
+      collection(this.db, "categories"),
+      limit(2),
+      orderBy("date", "desc")
+    );
+    
+    const querySnapshot = await getDocs(q);
+    const documents = [];
+
+    querySnapshot.forEach((doc) => {
+      documents.push({ id: doc.id, ...doc.data() });
+    });
+
+    return documents;
   }
 
   async getProductByUser(user) {
@@ -218,7 +235,7 @@ export default class Firestore {
 
   async sortdata(collectionName, by, how) {
     try {
-      const collectionRef = this.db.collection(collectionName);
+      const collectionRef = collection(this.db, collectionName);
 
       // Query the collection and sort by price in descending order
       const snapshot = await collectionRef.orderBy(by, how).get();
