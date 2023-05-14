@@ -65,7 +65,7 @@ function Shop({ addit }) {
     ) {
       filters = JSON.parse(localStorage.getItem("filters"));
     }
-    console.log(filters);
+    //console.log(filters);
     window.scrollTo(0, 0);
   }, []);
 
@@ -78,13 +78,13 @@ function Shop({ addit }) {
   //       };
   //     }
   //   });
-  //   console.log(filter_arr);
+  //   //console.log(filter_arr);
   // }, [products]);
 
   useEffect(() => {
     if (categorie == "reducere") catt = ["old_pret", ">", 0];
     else catt = ["categories", "==", categorie];
-    console.log(catt);
+    //console.log(catt);
   }, [catt, categorie]);
 
   useEffect(() => {
@@ -111,7 +111,7 @@ function Shop({ addit }) {
           setProducts((old) => (old = res));
         });
     } else {
-      console.log("catt: ", catt);
+      //console.log("catt: ", catt);
       firestore.readDocuments("products", catt).then(async (res) => {
         if (
           localStorage.getItem("filters") &&
@@ -133,7 +133,7 @@ function Shop({ addit }) {
   const sort = async (arr, cat, nope) => {
     switch (cat) {
       case "pc":
-        // console.log("pc acum");
+        // //console.log("pc acum");
         arr.sort((a, b) => a.pret - b.pret);
         // setProducts((prod) => [...prod.sort((a, b) => a.pret - b.pret)]);
         break;
@@ -161,14 +161,14 @@ function Shop({ addit }) {
     }
     if (nope !== "ok") setProducts((old) => [...arr]);
 
-    // console.log("products", products);
-    // console.log("arr", arr);
+    // //console.log("products", products);
+    // //console.log("arr", arr);
   };
 
   const updateFilters = async (arr, filters) => {
     await firestore.filter(arr, filters).then((res) => {
       arr = res;
-      console.log(res);
+      //console.log(res);
     });
 
     return arr;
@@ -176,14 +176,14 @@ function Shop({ addit }) {
 
   const addFilter = async (e, id) => {
     const check = e.target.checked;
-    console.log(check);
+    //console.log(check);
 
     if (check) {
-      console.log("==================ADAUGARE====================");
+      //console.log("==================ADAUGARE====================");
       filters = [...filters, { [id]: filter_arr[id] }];
       local_filters = [...local_filters, id];
     } else {
-      console.log("==================MARS====================");
+      //console.log("==================MARS====================");
 
       filters = filters.filter((f) => !compareArrays(f[id], filter_arr[id]));
       local_filters = local_filters.filter((f) => f !== id);
@@ -200,9 +200,10 @@ function Shop({ addit }) {
 
       if (categorie == "reducere") catt = ["old_pret", ">", 0];
       else catt = ["categories", "==", categorie];
-      console.log(catt);
+      //console.log(catt);
       if (categorie.includes("search")) {
         //search ========== includes
+     await
         firestore
           .readDocuments("products", ["nume", [], categorie])
           .then(async (res) => {
@@ -214,7 +215,7 @@ function Shop({ addit }) {
             setProducts((old) => (old = res));
           });
       } else
-        firestore.readDocuments("products", catt).then(async (res) => {
+        await firestore.readDocuments("products", catt).then(async (res) => {
           if (sort_param) {
             sort(res, sort_param);
           }
@@ -222,20 +223,20 @@ function Shop({ addit }) {
           res = await updateFilters(res, filters);
 
           setProducts((old) => (old = res));
-          console.log(res, products);
+          //console.log(res, products);
           products = res;
-          console.log(res, products);
+          //console.log(res, products);
 
-          // console.log(arr);
+          // //console.log(arr);
         });
     }
 
     localStorage.setItem("filters", JSON.stringify(filters));
     localStorage.setItem("local_filters", JSON.stringify(local_filters));
-    console.log("products: ", products);
+    //console.log("products: ", products);
     const rasp = await updateFilters(products, filters);
-    console.log("rasp", rasp);
-    console.log(filters);
+    //console.log("rasp", rasp);
+    //console.log(filters);
 
     if (rasp !== false) {
       if (sort_param) {
@@ -285,7 +286,7 @@ function Shop({ addit }) {
     //     arr = res;
     //     setProducts((old) => (old = res));
     //     products = res;
-    //     // console.log(arr);
+    //     // //console.log(arr);
     //   });
     // }
 
@@ -354,7 +355,8 @@ function Shop({ addit }) {
                         >
                           {index <= 5
                             ? (ar[0] === "over" ? "> " : ar[0] + " - ") +
-                              ar[1] +" RON"
+                              ar[1] +
+                              " RON"
                             : index == 6 && <>Discount</>}
                         </label>
                       </div>

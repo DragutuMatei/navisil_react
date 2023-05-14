@@ -86,9 +86,6 @@ function App() {
     });
 
     return true;
-    // return await firestore.updateDocument("products",).then(res => {
-
-    // })
   };
 
   return (

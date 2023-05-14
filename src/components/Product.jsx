@@ -28,13 +28,14 @@ function Product({
   }, [count, user]);
 
   const getcos = async () => {
-    // return await firestore.getCos(user);
     let prods = await firestore.getProductByUser(user);
-    prods.cant = prods.cant.filter((prod) => id === prod.id);
-    console.log(prods.cant[0].cant);
-    setDinCos(prods.cant[0].cant);
+    if (prods.cant) {
+      prods.cant = prods.cant.filter((prod) => id === prod.id);
+      if (prods.cant[0] !== undefined) {
+          setDinCos(prods.cant[0].cant);
+      } else return;
+    }
   };
-
 
   const addit_prod = async (cant) => {
     setCount((old) => old + 1);

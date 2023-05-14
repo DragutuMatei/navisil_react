@@ -60,8 +60,7 @@ export default class Firestore {
         return true;
       })
       .catch((e) => {
-        // console.log(e);
-        return false;
+          return false;
       });
   }
 
@@ -120,7 +119,7 @@ export default class Firestore {
       }
       // cant.forEach(async prod => {
       // })
-      // console.log("2) ", cant);
+      // // console.log("2) ", cant);
     }
     return { cant, total };
   }
@@ -132,7 +131,7 @@ export default class Firestore {
         cantitate: cant,
         user_id: user.uid,
       }).then((res) => {
-        // console.log(res);
+        // // console.log(res);
         if (res === "adaug") alert("Adaugat cu succes in cos!");
         else if (res === "update ok") alert("Update cantitate");
         else alert("eroare");
@@ -174,7 +173,7 @@ export default class Firestore {
         });
       }
     } catch (err) {
-      console.error(err);
+      // console.error(err);
       alert(err.message);
     }
   }
@@ -186,11 +185,11 @@ export default class Firestore {
     // Use the addDoc() method to add a new document to the products collection
     return await addDoc(productsRef, product)
       .then((docRef) => {
-        // console.log("Document written with ID: ", docRef.id);
+        // // console.log("Document written with ID: ", docRef.id);
         return docRef.id;
       })
       .catch((error) => {
-        console.error("Error adding document: ", error);
+        // console.error("Error adding document: ", error);
       });
   }
 
@@ -208,11 +207,11 @@ export default class Firestore {
     if (querySnapshot.size !== 1) {
       await addDoc(productsRef, product)
         .then((docRef) => {
-          // console.log("Document written with ID: ", docRef.id);
+          // // console.log("Document written with ID: ", docRef.id);
           return "adaug";
         })
         .catch((error) => {
-          console.error("Error adding document: ", error);
+          // console.error("Error adding document: ", error);
         });
 
       return "adaug";
@@ -225,10 +224,10 @@ export default class Firestore {
       await updateDoc(productRef, {
         cantitate: productDoc.get("cantitate") + product.cantitate,
       });
-      // console.log("Document successfully updated!");
+      // // console.log("Document successfully updated!");
       return "update ok";
     } catch (error) {
-      // console.log("Error updating document:", error);
+      // // console.log("Error updating document:", error);
       return false;
     }
   }
@@ -245,7 +244,7 @@ export default class Firestore {
 
       return sortedData;
     } catch (error) {
-      console.error("Error sorting data:", error);
+      // console.error("Error sorting data:", error);
       throw error;
     }
   }
@@ -264,13 +263,14 @@ export default class Firestore {
     for (let i = 0; i < filters.length; i++) {
       let filter = filters[i];
       for (let j = 0; j < filter.length; j++) {
+        // console.log(filter[j][1])
+        
         switch (filter[j][1]) {
           case ">=":
             arr = arr.filter((a) => a[filter[j][0]] >= filter[j][2]);
             break;
 
           case "<=":
-            // if (arr[i][filter[0]] <= filter[2]) rez.push(arr[i]);
             arr = arr.filter((a) => a[filter[j][0]] <= filter[j][2]);
             break;
           case ">":
@@ -283,16 +283,13 @@ export default class Firestore {
             break;
 
           case "==":
-            console.log(filter);
-            // if (filter[0] == "reviews") {
-            //   arr = arr.filter((a) => a[filter[0]] == filter[2]);
-            // } else
             arr = arr.filter((a) => a[filter[j][0]] == filter[j][2]);
             break;
         }
       }
     }
-    console.log(arr);
+    // console.log(arr);
+    
     if (filters.length == 0) return false;
     return arr;
   }
@@ -355,7 +352,7 @@ export default class Firestore {
   }
   // Update a document in a collection
   async updateDocument(collectionName, documentId, data) {
-    // console.log(collectionName, documentId, data);
+    // // console.log(collectionName, documentId, data);
     const ref = doc(this.db, collectionName, documentId);
 
     // Set the "capital" field of the city 'DC'
@@ -402,7 +399,7 @@ export default class Firestore {
         for (let i = 0; i < reviews.length; i++) {
           if (i != index) {
             newRating += reviews[i].rating;
-            // console.log(reviews[i].rating);
+            // // console.log(reviews[i].rating);
           }
         }
         newRating /= reviews.length - 1;
@@ -429,7 +426,7 @@ export default class Firestore {
   async delete_all_from_cart_by_user_id(id) {
     const carts = await this.readDocuments("cos", ["user_id", "==", id]);
     for (const cart of carts) {
-      console.log(cart);
+      // console.log(cart);
       await this.deleteDocument("cos", cart.id);
     }
   }
