@@ -281,7 +281,7 @@ function AdminPage() {
   return loading ? (
     <h1>Se incarca</h1> 
   ) : user ? (
-    !ids.includes(user.uid) ? (
+    ids.includes(user.uid) ? (
       <>
         <div style={{ margin: "0 30px" }}>
           <section className="addSection">
