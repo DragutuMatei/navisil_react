@@ -86,7 +86,7 @@ function Home({ addit }) {
                 >
                   <img
                     className="position-absolute w-100 h-100"
-                    src={require("../img/carousel-1.jpg")}
+                    src={require("../img/1.jpg")}
                     style={{ objectFit: "cover" }}
                   />
                   <div className="carousel-caption d-flex flex-column align-items-center justify-content-center">
@@ -116,7 +116,7 @@ function Home({ addit }) {
                 >
                   <img
                     className="position-absolute w-100 h-100"
-                    src={require("../img/carousel-2.jpg")}
+                    src={require("../img/2.jpg")}
                     style={{ objectFit: "cover" }}
                   />
                   <div className="carousel-caption d-flex flex-column align-items-center justify-content-center">
@@ -146,7 +146,7 @@ function Home({ addit }) {
                 >
                   <img
                     className="position-absolute w-100 h-100"
-                    src={require("../img/carousel-3.jpg")}
+                    src={require("../img/3.jpg")}
                     style={{ objectFit: "cover" }}
                   />
                   <div className="carousel-caption d-flex flex-column align-items-center justify-content-center">
@@ -175,11 +175,7 @@ function Home({ addit }) {
           </div>
           <div className="col-lg-4">
             <div className="product-offer mb-30" style={{ height: "200px" }}>
-              <img
-                className="img-fluid"
-                src={require("../img/offer-1.jpg")}
-                alt=""
-              />
+              <img className="img-fluid" src={require("../img/4.jpg")} alt="" />
               <div className="offer-text">
                 <h6 className="text-white text-uppercase">Lastest products</h6>
                 <h3 className="text-white mb-3">
@@ -196,11 +192,7 @@ function Home({ addit }) {
               </div>
             </div>{" "}
             <div className="product-offer mb-30" style={{ height: "200px" }}>
-              <img
-                className="img-fluid"
-                src={require("../img/offer-2.jpg")}
-                alt=""
-              />
+              <img className="img-fluid" src={require("../img/5.jpg")} alt="" />
               <div className="offer-text">
                 <h6 className="text-white text-uppercase">Lastest products</h6>
                 <h3 className="text-white mb-3">
@@ -340,11 +332,7 @@ function Home({ addit }) {
         <div className="row px-xl-5">
           <div className="col-md-6">
             <div className="product-offer mb-30" style={{ height: "300px" }}>
-              <img
-                className="img-fluid"
-                src={require("../img/offer-1.jpg")}
-                alt=""
-              />
+              <img src={require("../img/4.jpg")} className="img-fluid" alt="" />
               <div className="offer-text">
                 <h6 className="text-white text-uppercase">Lastest products</h6>
                 <h3 className="text-white mb-3">
@@ -364,11 +352,7 @@ function Home({ addit }) {
           <div className="col-md-6">
             {" "}
             <div className="product-offer mb-30" style={{ height: "300px" }}>
-              <img
-                className="img-fluid"
-                src={require("../img/offer-2.jpg")}
-                alt=""
-              />
+              <img className="img-fluid" src={require("../img/5.jpg")} alt="" />
               <div className="offer-text">
                 <h6 className="text-white text-uppercase">Lastest products</h6>
                 <h3 className="text-white mb-3">

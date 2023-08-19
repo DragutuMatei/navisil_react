@@ -466,7 +466,56 @@ function AdminPage() {
           </section>
           <br />
           <br />
-          <hr />
+            <hr />
+            <div style={{ margin: "0 30px" }}>
+          <h1>Mesaje: </h1>
+          {mesajeContact &&
+            mesajeContact.map((mes) => {
+              return (
+                <>
+                  <div key={mes.id}>
+                    <h4>
+                      {" "}
+                      <b> {mes.nume}</b> -{" "}
+                      <a href={`mailto: ${mes.email}`}>{mes.email}</a>{" "}
+                    </h4>
+                    <h5>
+                      {" "}
+                      <b>-</b>
+                      {mes.subject} <b>-</b>
+                    </h5>
+                    <p>{mes.message}</p>
+                    <button onClick={() => delete_mes(mes.id)}>
+                      Delete mesaj
+                    </button>
+                  </div>
+                  <hr />
+                  <br />
+                </>
+              );
+            })}
+        </div>
+        <div style={{ margin: "0 30px" }}>
+          <h1>Categorii: </h1>
+          <input type="text" onChange={(e) => setcate(e.target.value)} />
+          <button onClick={addc}>add categorie</button>
+          <br />
+          {categories &&
+            categories.map((cat) => (
+              <>
+                <div key={cat.categorie}>
+                  <h3> {cat.categorie}</h3>
+                  <button onClick={() => deletecat(cat.id)}>
+                    delete categorie
+                  </button>
+                </div>
+                <hr />
+                <br />
+                <br />
+              </>
+            ))}
+            </div>
+            <br /><br /><br /><hr />
           <section className="prods">
             {updateState && (
               <section id="update">
@@ -747,54 +796,7 @@ function AdminPage() {
         <br />
         <hr />
         <br />
-        <div style={{ margin: "0 30px" }}>
-          <h1>Mesaje: </h1>
-          {mesajeContact &&
-            mesajeContact.map((mes) => {
-              return (
-                <>
-                  <div key={mes.id}>
-                    <h4>
-                      {" "}
-                      <b> {mes.nume}</b> -{" "}
-                      <a href={`mailto: ${mes.email}`}>{mes.email}</a>{" "}
-                    </h4>
-                    <h5>
-                      {" "}
-                      <b>-</b>
-                      {mes.subject} <b>-</b>
-                    </h5>
-                    <p>{mes.message}</p>
-                    <button onClick={() => delete_mes(mes.id)}>
-                      Delete mesaj
-                    </button>
-                  </div>
-                  <hr />
-                  <br />
-                </>
-              );
-            })}
-        </div>
-        <div style={{ margin: "0 30px" }}>
-          <h1>Categorii: </h1>
-          <input type="text" onChange={(e) => setcate(e.target.value)} />
-          <button onClick={addc}>add categorie</button>
-          <br />
-          {categories &&
-            categories.map((cat) => (
-              <>
-                <div key={cat.categorie}>
-                  <h3> {cat.categorie}</h3>
-                  <button onClick={() => deletecat(cat.id)}>
-                    delete categorie
-                  </button>
-                </div>
-                <hr />
-                <br />
-                <br />
-              </>
-            ))}
-        </div>
+       
       </>
     ) : (
       <h1> Nu ai acces aici</h1>

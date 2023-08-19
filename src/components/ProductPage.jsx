@@ -475,7 +475,7 @@ function ProductPage({ addit }) {
                     style={{
                       cursor: "pointer",
                       margin: "5px 20px",
-                      color: "#FFD333",
+                      color: "#26B33E",
                     }}
                     onClick={signInWithGoogle}
                   >

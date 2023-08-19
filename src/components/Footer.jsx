@@ -152,11 +152,11 @@ function Footer() {
           <p className="mb-md-0 text-center text-md-left text-secondary">
             &copy;
             <a className="text-primary" href="#">
-              Navisil
+            Ivantec
             </a>
             . All Rights Reserved. Designed by{" "}
             <a className="text-primary" href="#">
-              Navisil
+            Ivantec
             </a>
           </p>
         </div>

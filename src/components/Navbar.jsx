@@ -61,10 +61,10 @@ function Navbar({ cos }) {
           <div className="col-lg-4 	d-none d-lg-block ">
             <Link to="/" className="text-decoration-none">
               <span className="h1 text-uppercase text-primary bg-dark px-2">
-                NAVI
+                IVAN
               </span>
               <span className="h1 text-uppercase text-dark bg-primary px-2 ml-n1">
-                SIL
+                TEC
               </span>
             </Link>
           </div>
@@ -124,7 +124,7 @@ function Navbar({ cos }) {
                     style={{
                       cursor: "pointer",
                       margin: "5px 20px",
-                      color: "#FFD333",
+                      color: "#26B33E",
                     }}
                     onClick={logout}
                   >
@@ -137,7 +137,7 @@ function Navbar({ cos }) {
                 style={{
                   cursor: "pointer",
                   margin: "5px 20px",
-                  color: "#FFD333",
+                  color: "#26B33E",
                 }}
                 onClick={signInWithGoogle}
               >
@@ -225,7 +225,7 @@ function Navbar({ cos }) {
               style={{ width: "100%", zIndex: "999" }}
             >
               <div className="navbar-nav w-100 categories">
-              <Link to={`/shop/all`} className="nav-item nav-link">
+                <Link to={`/shop/all`} className="nav-item nav-link">
                   Toate produsele
                 </Link>
                 <Link to={`/shop/reducere`} className="nav-item nav-link">
