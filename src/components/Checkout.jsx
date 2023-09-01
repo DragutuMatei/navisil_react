@@ -50,131 +50,130 @@ function Checkout({ finish, fixCant }) {
   useEffect(() => {
     ok();
   }, [user]);
-
+  const [isfull, setfull] = useState(false);
   const sendEmail = async (e) => {
     e.preventDefault();
-    // setLoadingSend(true);
-
-    let a = `<div>
-    <h3>Products: </h3>
-    <ul>`;
-    let total_pret_final = 0;
-    hidden.map((h) => {
-      a += `<li>  ${JSON.stringify(h.name)}: ${JSON.stringify(h.cant)} x 
-       ${JSON.stringify(h.pret)} </li>`;
-      total_pret_final = total_pret_final + h.pret * h.cant;
-    });
-
-    const {
-      first_name,
-      last_name,
-      email,
-      tel,
-      adress1,
-      adress2,
-      oras,
-      zip,
-      diff,
-      nume1,
-      nume2,
-      email2,
-      tel2,
-      adress11,
-      adress12,
-      oras1,
-      zip1,
-      paypal,
-      direct,
-      transfer,
-    } = form.current.elements;
-
-    a += `</ul>
-          <h2>Pret final: ${(total + ship).toLocaleString("en-US")}</h2>
-          <h3>email: <span>${email.value}</span> </h3>
-          <h4>tel: <span>${tel.value}</span></h4>
-          <h4>adress: <span>${adress1.value}, ${adress2.value}</span></h4>
-          <h4>oras: <span>${oras.value}</span></h4>
-          <h4>zip: <span>${zip.value}</span></h4>
-          <br/>
-          ${
-            diff.checked
-              ? `
-          <h4>Ship to a diff adress? <span>${diff.checked}</span></h4>
-          <h4>shipping to:
-          <h4>nume: <span>${nume1.value} ${nume2.value}</span></h4>
-          <h4>email: <span>${email2.value}</span></h4>
-          <h4>tel: <span>${tel2.value}</span></h4>
-          <h4>adress: <span>${adress11.value}, ${adress12.value}</span></h4>
-          <h4>oras: <span>${oras1.value}</span></h4>
-          <h4>zip: <span>${zip1.value}</span></h4>
-          <br/>
-`
-              : ""
-          }
-          <h4>Plata:
-          <h4>paypal: <span>${paypal.checked}</span></h4>
-          <h4>direct: <span>${direct.checked}</span></h4>
-          <h4>transfer: <span>${transfer.checked}</span></h4>
-    </div>
-    `;
-
-    const templateParams = {
-      template: a,
-      last_name: last_name.value,
-      first_name: first_name.value,
-      email: email.value,
-    };
-
-    // await axios
-    //   .post("http://localhost:4000/payment", {
-    //     hidden: hidden,
-    //   })
-    //   .then((res) => {
-    //     console.log(res);
-    //   });
-
-    // await emailjs
-    //   .send(
-    //     process.env.REACT_APP_SERVICEID_EMAIL,
-    //     process.env.REACT_APP_TEMPLATEID_EMAIL,
-    //     // form.current,
-    //     templateParams,
-    //     process.env.REACT_APP_PUBLICKEY_EMAIL
-    //   )
-    //   .then(
-    //     async (result) => {
-    //       console.log(result);
-    //       if (result.status == 200) {
-    //         alert("comanda plasata");
-    //         await finish().then(async (res) => {
-    //           await fixCant(hidden).then((res) => {
-    //             setLoadingSend(false);
-    //             navigate("/shop/all");
-    //           });
-    //         });
-    //       } else {
-    //         alert("a intervenit o problema la plasarea comenzii");
-    //       }
-    //     },
-    //     (error) => {
-    //       console.log(error.text);
-    //       alert(error.text);
-    //     }
-    //   );
   };
 
   const handleToken = async (token) => {
     try {
-      const response = await axios.post("http://localhost:3001/payment", {
+      setLoadingSend(true);
+      const response = await axios.post(process.env.REACT_APP_URL, {
         token,
         amount: (total + ship) * 100,
       });
-      console.log(response.data, response.data.charge.receipt_url);
+      if (response.data.ok) {
+        alert(response.data.message);
+        let a = `<div>
+            <h3>Products: </h3>
+            <ul>`;
+        hidden.map((h) => {
+          a += `<li>  ${JSON.stringify(h.name)}: ${JSON.stringify(h.cant)} x
+               ${JSON.stringify(h.pret)} </li>`;
+        });
+        const {
+          first_name,
+          last_name,
+          email,
+          tel,
+          adress1,
+          adress2,
+          oras,
+          zip,
+          diff,
+          nume1,
+          nume2,
+          email2,
+          tel2,
+          adress11,
+          adress12,
+          oras1,
+          zip1,
+        } = form.current.elements;
+        a += `</ul>
+                  <h2>Pret final: ${(total + ship).toLocaleString("en-US")}</h2>
+                  <h3>email: <span>${email.value}</span> </h3>
+                  <h4>tel: <span>${tel.value}</span></h4>
+                  <h4>adress: <span>${adress1.value}, ${
+          adress2.value
+        }</span></h4>
+                  <h4>oras: <span>${oras.value}</span></h4>
+                  <h4>zip: <span>${zip.value}</span></h4>
+                  <br/>
+                  ${
+                    diff.checked
+                      ? `
+                  <h4>Ship to a diff adress? <span>${diff.checked}</span></h4>
+                  <h4>shipping to:
+                  <h4>nume: <span>${nume1.value} ${nume2.value}</span></h4>
+                  <h4>email: <span>${email2.value}</span></h4>
+                  <h4>tel: <span>${tel2.value}</span></h4>
+                  <h4>adress: <span>${adress11.value}, ${adress12.value}</span></h4>
+                  <h4>oras: <span>${oras1.value}</span></h4>
+                  <h4>zip: <span>${zip1.value}</span></h4>
+                  <br/>`
+                      : ""
+                  }
+            </div>`;
+        const templateParams = {
+          template: a,
+          last_name: last_name.value,
+          first_name: first_name.value,
+          email: email.value,
+          factura: `<a href="${response.data.charge.receipt_url}">Downloadeaza factura</a>`,
+        };
+        await emailjs
+          .send(
+            process.env.REACT_APP_SERVICEID_EMAIL,
+            process.env.REACT_APP_TEMPLATEID_EMAIL,
+            templateParams,
+            process.env.REACT_APP_PUBLICKEY_EMAIL
+          )
+          .then(
+            async (result) => {
+              console.log(result);
+              if (result.status == 200) {
+                alert("comanda plasata");
+                await finish().then(async (res) => {
+                  await fixCant(hidden).then((res) => {
+                    navigate("/shop/all");
+                  });
+                });
+              } else {
+                alert("a intervenit o problema la plasarea comenzii");
+              }
+            },
+            (error) => {
+              console.log(error.text);
+              alert(error.text);
+            }
+          );
+      }
+      // console.log(response.data, response.data.charge.receipt_url);
     } catch (error) {
       console.error("Error processing payment:", error);
     }
+    setLoadingSend(false);
   };
 
+  const test = () => {
+    if (
+      form.current &&
+      form.current.elements &&
+      form.current.elements.first_name.value != "" &&
+      form.current.elements.last_name.value != "" &&
+      form.current.elements.email.value != "" &&
+      form.current.elements.tel.value != "" &&
+      form.current.elements.adress1.value != "" &&
+      form.current.elements.adress2.value != "" &&
+      form.current.elements.oras.value != "" &&
+      form.current.elements.zip.value != ""
+    ) {
+      setfull(true);
+    } else {
+      alert("Completeaza toate campurile!");
+    }
+  };
   return (
     <>
       {!loading && !user && <Navigate to="/" />}
@@ -417,16 +416,12 @@ function Checkout({ finish, fixCant }) {
             </div>
           </div>
           <div className="col-lg-4">
-            <h5 className="section-title position-relative text-uppercase mb-3">
-              <span className="bg-secondary pr-3">Order Total</span>
-            </h5>
-
             <div className="mb-5">
               <h5 className="section-title position-relative text-uppercase mb-3">
                 <span className="bg-secondary pr-3">Payment</span>
               </h5>
               <div className="bg-light p-30">
-                <div className="form-group">
+                {/* <div className="form-group">
                   <div className="custom-control custom-checkbox">
                     <input
                       type="checkbox"
@@ -489,40 +484,39 @@ function Checkout({ finish, fixCant }) {
                       Bank Transfer
                     </label>
                   </div>
-                </div>
-                {loading_send ? (
-                  <div className="form-group" style={{ marginTop: 50 }}>
-                    <span
-                      className="loader custom-control custom-checkbox"
-                      style={{
-                        position: "relative",
-                        margin: "auto",
-                      }}
-                    ></span>
-                  </div>
-                ) : (
-                  <>
+                </div> */}
+
+                {isfull ? (
+                  <StripeCheckout
+                    token={handleToken}
+                    stripeKey="pk_test_51NhBUiHMkFCUWYGvyOj0PR3sOdkdsGUCW4IMeYGuU2uTGI5EqQopbRdyRjWD1Dnd0NgqpuJ7sSRBSkYVOZljcugw00SmNU6Hoq"
+                    amount={(total + ship) * 100}
+                    allowRememberMe={true}
+                    currency="RON"
+                    name="Online Payment Site"
+                    shippingAddress={true}
+                    zipCode={true}
+                  >
                     <button
                       type="submit"
                       className="btn btn-block btn-primary font-weight-bold py-3"
                     >
                       Place Order
                     </button>
-                  </>
+                  </StripeCheckout>
+                ) : (
+                  <button
+                    onClick={test}
+                    className="btn btn-block btn-primary font-weight-bold py-3"
+                  >
+                    Verifica adresa
+                  </button>
                 )}
               </div>
             </div>
           </div>
         </form>
       </div>
-      <StripeCheckout
-        token={handleToken}
-        stripeKey="pk_test_51NhBUiHMkFCUWYGvyOj0PR3sOdkdsGUCW4IMeYGuU2uTGI5EqQopbRdyRjWD1Dnd0NgqpuJ7sSRBSkYVOZljcugw00SmNU6Hoq"
-        amount={(total + ship) * 100}
-        allowRememberMe={true}
-        currency="RON"
-        name="Online Payment Site"
-      />
 
       {/* <StripeContain/er ammount={total + ship} /> */}
 

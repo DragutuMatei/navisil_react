@@ -8,20 +8,22 @@ function Footer() {
         <div className="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
           <h5 className="text-secondary text-uppercase mb-4">Get In Touch</h5>
           <p className="mb-4">
-            No dolore ipsum accusam no lorem. Invidunt sed clita kasd clita et
-            et dolor sed dolor. Rebum tempor no vero est magna amet no
+            NAVISIL este o companie care crede în importanța
+            serviciilor de calitate. Echipa NAVISIL
+            vă va ajuta să găsiți produsul perfect și să vă asigurați că sunteți
+            mulțumit de achiziția dumneavoastră.
           </p>
           <p className="mb-2">
-            <i className="fa fa-map-marker-alt text-primary mr-3"></i>123
-            Street, New York, USA
+            <i className="fa fa-map-marker-alt text-primary mr-3"></i>
+            Str. Pasajul Unirii 2
           </p>
           <p className="mb-2">
             <i className="fa fa-envelope text-primary mr-3"></i>
-            <a href="mailto: info@example.com">info@example.com</a>
+            <a href="mailto: ivantecsite@gmail.com">ivantecsite@gmail.com</a>
           </p>
           <p className="mb-0">
             <i className="fa fa-phone-alt text-primary mr-3"></i>
-            <a href="tel:012 345 67890">+012 345 67890</a>
+            <a href="tel:762 888 863">762 888 863</a>
           </p>
         </div>
         <div className="col-lg-8 col-md-12">
@@ -108,7 +110,7 @@ function Footer() {
                 </a> */}
               </div>
             </div>
-            <div className="col-md-4 mb-5">
+            {/* <div className="col-md-4 mb-5">
               <h5 className="text-secondary text-uppercase mb-4">Newsletter</h5>
               <p>Duo stet tempor ipsum sit amet magna ipsum tempor est</p>
               <form action="">
@@ -140,7 +142,7 @@ function Footer() {
                   <i className="fab fa-instagram"></i>
                 </a>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -152,12 +154,9 @@ function Footer() {
           <p className="mb-md-0 text-center text-md-left text-secondary">
             &copy;
             <a className="text-primary" href="#">
-            Ivantec
+              Ivantec
             </a>
-            . All Rights Reserved. Designed by{" "}
-            <a className="text-primary" href="#">
-            Ivantec
-            </a>
+            . All Rights Reserved. Designed by Matei Dragutu
           </p>
         </div>
         {/* <div className="col-md-6 px-xl-0 text-center text-md-right">

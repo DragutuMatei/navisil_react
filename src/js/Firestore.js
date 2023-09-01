@@ -60,7 +60,7 @@ export default class Firestore {
         return true;
       })
       .catch((e) => {
-          return false;
+        return false;
       });
   }
 
@@ -82,7 +82,7 @@ export default class Firestore {
       limit(2),
       orderBy("date", "desc")
     );
-    
+
     const querySnapshot = await getDocs(q);
     const documents = [];
 
@@ -264,7 +264,7 @@ export default class Firestore {
       let filter = filters[i];
       for (let j = 0; j < filter.length; j++) {
         // console.log(filter[j][1])
-        
+
         switch (filter[j][1]) {
           case ">=":
             arr = arr.filter((a) => a[filter[j][0]] >= filter[j][2]);
@@ -289,7 +289,7 @@ export default class Firestore {
       }
     }
     // console.log(arr);
-    
+
     if (filters.length == 0) return false;
     return arr;
   }
