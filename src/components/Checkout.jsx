@@ -3,8 +3,9 @@ import emailjs from "@emailjs/browser";
 import Firestore from "../js/Firestore";
 import { getAuth } from "@firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
-import Text from "../util/Text";
 import { Link, Navigate, useNavigate } from "react-router-dom";
+import axios from "axios";
+import StripeCheckout from "react-stripe-checkout";
 
 const firestore = new Firestore();
 const auth = getAuth();
@@ -52,14 +53,16 @@ function Checkout({ finish, fixCant }) {
 
   const sendEmail = async (e) => {
     e.preventDefault();
-    setLoadingSend(true);
+    // setLoadingSend(true);
 
     let a = `<div>
     <h3>Products: </h3>
     <ul>`;
+    let total_pret_final = 0;
     hidden.map((h) => {
       a += `<li>  ${JSON.stringify(h.name)}: ${JSON.stringify(h.cant)} x 
        ${JSON.stringify(h.pret)} </li>`;
+      total_pret_final = total_pret_final + h.pret * h.cant;
     });
 
     const {
@@ -122,34 +125,54 @@ function Checkout({ finish, fixCant }) {
       email: email.value,
     };
 
-    await emailjs
-      .send(
-        process.env.REACT_APP_SERVICEID_EMAIL,
-        process.env.REACT_APP_TEMPLATEID_EMAIL,
-        // form.current,
-        templateParams,
-        process.env.REACT_APP_PUBLICKEY_EMAIL
-      )
-      .then(
-        async (result) => {
-          console.log(result);
-          if (result.status == 200) {
-            alert("comanda plasata");
-            await finish().then(async (res) => {
-              await fixCant(hidden).then((res) => {
-                setLoadingSend(false);
-                navigate("/shop/all");
-              });
-            });
-          } else {
-            alert("a intervenit o problema la plasarea comenzii");
-          }
-        },
-        (error) => {
-          console.log(error.text);
-          alert(error.text);
-        }
-      );
+    // await axios
+    //   .post("http://localhost:4000/payment", {
+    //     hidden: hidden,
+    //   })
+    //   .then((res) => {
+    //     console.log(res);
+    //   });
+
+    // await emailjs
+    //   .send(
+    //     process.env.REACT_APP_SERVICEID_EMAIL,
+    //     process.env.REACT_APP_TEMPLATEID_EMAIL,
+    //     // form.current,
+    //     templateParams,
+    //     process.env.REACT_APP_PUBLICKEY_EMAIL
+    //   )
+    //   .then(
+    //     async (result) => {
+    //       console.log(result);
+    //       if (result.status == 200) {
+    //         alert("comanda plasata");
+    //         await finish().then(async (res) => {
+    //           await fixCant(hidden).then((res) => {
+    //             setLoadingSend(false);
+    //             navigate("/shop/all");
+    //           });
+    //         });
+    //       } else {
+    //         alert("a intervenit o problema la plasarea comenzii");
+    //       }
+    //     },
+    //     (error) => {
+    //       console.log(error.text);
+    //       alert(error.text);
+    //     }
+    //   );
+  };
+
+  const handleToken = async (token) => {
+    try {
+      const response = await axios.post("http://localhost:3001/payment", {
+        token,
+        amount: (total + ship) * 100,
+      });
+      console.log(response.data, response.data.charge.receipt_url);
+    } catch (error) {
+      console.error("Error processing payment:", error);
+    }
   };
 
   return (
@@ -492,6 +515,16 @@ function Checkout({ finish, fixCant }) {
           </div>
         </form>
       </div>
+      <StripeCheckout
+        token={handleToken}
+        stripeKey="pk_test_51NhBUiHMkFCUWYGvyOj0PR3sOdkdsGUCW4IMeYGuU2uTGI5EqQopbRdyRjWD1Dnd0NgqpuJ7sSRBSkYVOZljcugw00SmNU6Hoq"
+        amount={(total + ship) * 100}
+        allowRememberMe={true}
+        currency="RON"
+        name="Online Payment Site"
+      />
+
+      {/* <StripeContain/er ammount={total + ship} /> */}
 
       <a href="#" className="btn btn-primary back-to-top">
         <i className="fa fa-angle-double-up"></i>
