@@ -203,8 +203,7 @@ function Shop({ addit }) {
       //console.log(catt);
       if (categorie.includes("search")) {
         //search ========== includes
-     await
-        firestore
+        await firestore
           .readDocuments("products", ["nume", [], categorie])
           .then(async (res) => {
             if (sort_param) {
@@ -448,17 +447,6 @@ function Shop({ addit }) {
             <div className="row pb-3 products">
               <div className="col-12 pb-1">
                 <div className="d-flex align-items-center justify-content-between mb-4">
-                  <div className="d-flex align-items-center justify-content-between ">
-                    <h5>
-                      {products && products.length}
-                      {" - "}{" "}
-                      {products && products.length == 1 ? (
-                        <>Produs</>
-                      ) : (
-                        <>Produse</>
-                      )}
-                    </h5>
-                  </div>
                   <div className="ml-2">
                     <div className="btn-group">
                       <button
@@ -524,6 +512,17 @@ function Shop({ addit }) {
                         </Link>
                       </div>
                     </div>
+                  </div>{" "}
+                  <div className="d-flex align-items-center justify-content-between ">
+                    <h5>
+                      {products && products.length}
+                      {" - "}{" "}
+                      {products && products.length == 1 ? (
+                        <>Produs</>
+                      ) : (
+                        <>Produse</>
+                      )}
+                    </h5>
                   </div>
                 </div>
               </div>
