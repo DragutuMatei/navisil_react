@@ -9,7 +9,11 @@ const firestore = new Firestore();
 const storage = getStorage();
 const auth = getAuth();
 
-const ids = ["lwiXVbRBYhhFGnz2OQsb7nitcI03", "jrn0zqDZ4rZqjM3rJve2mOEtCc33"];
+const ids = [
+  "lwiXVbRBYhhFGnz2OQsb7nitcI03",
+  "jrn0zqDZ4rZqjM3rJve2mOEtCc33",
+  "ZeUrx2XdJvaCn45ztSRKIAJG8kY2",
+];
 
 function AdminPage() {
   //get categories
@@ -279,7 +283,7 @@ function AdminPage() {
   };
 
   return loading ? (
-    <h1>Se incarca</h1> 
+    <h1>Se incarca</h1>
   ) : user ? (
     ids.includes(user.uid) ? (
       <>
@@ -466,56 +470,59 @@ function AdminPage() {
           </section>
           <br />
           <br />
-            <hr />
-            <div style={{ margin: "0 30px" }}>
-          <h1>Mesaje: </h1>
-          {mesajeContact &&
-            mesajeContact.map((mes) => {
-              return (
+          <hr />
+          <div style={{ margin: "0 30px" }}>
+            <h1>Mesaje: </h1>
+            {mesajeContact &&
+              mesajeContact.map((mes) => {
+                return (
+                  <>
+                    <div key={mes.id}>
+                      <h4>
+                        {" "}
+                        <b> {mes.nume}</b> -{" "}
+                        <a href={`mailto: ${mes.email}`}>{mes.email}</a>{" "}
+                      </h4>
+                      <h5>
+                        {" "}
+                        <b>-</b>
+                        {mes.subject} <b>-</b>
+                      </h5>
+                      <p>{mes.message}</p>
+                      <button onClick={() => delete_mes(mes.id)}>
+                        Delete mesaj
+                      </button>
+                    </div>
+                    <hr />
+                    <br />
+                  </>
+                );
+              })}
+          </div>
+          <div style={{ margin: "0 30px" }}>
+            <h1>Categorii: </h1>
+            <input type="text" onChange={(e) => setcate(e.target.value)} />
+            <button onClick={addc}>add categorie</button>
+            <br />
+            {categories &&
+              categories.map((cat) => (
                 <>
-                  <div key={mes.id}>
-                    <h4>
-                      {" "}
-                      <b> {mes.nume}</b> -{" "}
-                      <a href={`mailto: ${mes.email}`}>{mes.email}</a>{" "}
-                    </h4>
-                    <h5>
-                      {" "}
-                      <b>-</b>
-                      {mes.subject} <b>-</b>
-                    </h5>
-                    <p>{mes.message}</p>
-                    <button onClick={() => delete_mes(mes.id)}>
-                      Delete mesaj
+                  <div key={cat.categorie}>
+                    <h3> {cat.categorie}</h3>
+                    <button onClick={() => deletecat(cat.id)}>
+                      delete categorie
                     </button>
                   </div>
                   <hr />
                   <br />
+                  <br />
                 </>
-              );
-            })}
-        </div>
-        <div style={{ margin: "0 30px" }}>
-          <h1>Categorii: </h1>
-          <input type="text" onChange={(e) => setcate(e.target.value)} />
-          <button onClick={addc}>add categorie</button>
+              ))}
+          </div>
           <br />
-          {categories &&
-            categories.map((cat) => (
-              <>
-                <div key={cat.categorie}>
-                  <h3> {cat.categorie}</h3>
-                  <button onClick={() => deletecat(cat.id)}>
-                    delete categorie
-                  </button>
-                </div>
-                <hr />
-                <br />
-                <br />
-              </>
-            ))}
-            </div>
-            <br /><br /><br /><hr />
+          <br />
+          <br />
+          <hr />
           <section className="prods">
             {updateState && (
               <section id="update">
@@ -796,7 +803,6 @@ function AdminPage() {
         <br />
         <hr />
         <br />
-       
       </>
     ) : (
       <h1> Nu ai acces aici</h1>
