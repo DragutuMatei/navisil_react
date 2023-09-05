@@ -183,6 +183,7 @@ function AdminPage() {
         console.error(error);
       }
     }
+    
     // console.log(downloadUrls);
     let idk = {
       ...updateItem,
@@ -464,7 +465,7 @@ function AdminPage() {
                       See
                     </button>
                   </>
-                )}{" "}
+                )} 
               </div>
             </div>
           </section>

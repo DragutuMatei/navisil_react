@@ -56,6 +56,7 @@ function Checkout({ finish, fixCant }) {
   };
 
   const handleToken = async (token) => {
+    console.log(process.env.REACT_APP_URL);
     try {
       setLoadingSend(true);
       const response = await axios.post(process.env.REACT_APP_URL, {
