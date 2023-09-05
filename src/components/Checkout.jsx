@@ -490,7 +490,7 @@ function Checkout({ finish, fixCant }) {
                 {isfull ? (
                   <StripeCheckout
                     token={handleToken}
-                    stripeKey="pk_test_51NhBUiHMkFCUWYGvyOj0PR3sOdkdsGUCW4IMeYGuU2uTGI5EqQopbRdyRjWD1Dnd0NgqpuJ7sSRBSkYVOZljcugw00SmNU6Hoq"
+                    stripeKey="pk_live_51NhBUiHMkFCUWYGvy6KxPEcuBxYNhb02ZotS3VUJnNb83IdTd0f0Jf4hQkoZfvWVYzndbqgQhTn9WRqsOSuZkjd100AmVsyHu0"
                     amount={(total + ship) * 100}
                     allowRememberMe={true}
                     currency="RON"
