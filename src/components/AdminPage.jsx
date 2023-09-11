@@ -59,8 +59,9 @@ function AdminPage() {
     getCategories();
     getProducts();
   }, []);
-  const delete_rev = async (rev) => {
-    await firestore.deleteRev({ rev, id: rev.id }).then((res) => {
+  const delete_rev = async (rev, id) => {
+    console.log(rev);
+    await firestore.deleteRev({ rev, id: id }).then((res) => {
       getProducts();
     });
   };
@@ -729,6 +730,7 @@ function AdminPage() {
                       <div>
                         {prod && prod.reviews ? (
                           prod.reviews.map((rev, index) => {
+                            console.log(rev);
                             return (
                               <>
                                 <div className="media mb-4" key={index}>
@@ -779,7 +781,7 @@ function AdminPage() {
                                       <button
                                         className="btn btn-primary px-3"
                                         onClick={() => {
-                                          delete_rev(rev);
+                                          delete_rev(rev, prod.id);
                                         }}
                                       >
                                         Delete review

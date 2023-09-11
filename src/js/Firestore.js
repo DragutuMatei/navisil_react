@@ -379,6 +379,7 @@ export default class Firestore {
   }
 
   async deleteRev(revi) {
+    console.log(revi)
     const { date, rating, review, user } = revi.rev;
     const id = revi.id;
 
